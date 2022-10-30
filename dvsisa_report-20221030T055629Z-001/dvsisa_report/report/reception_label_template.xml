@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <template id="reception_label_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.basic_layout" style="position:static;">
+                        
+                        <t t-as="line" t-foreach="doc.move_ids_without_package">
+                          
+                            <div class="page" style="font-size:16px;">
+                                <p class="text-center" style="font-size:26px;"><strong><span t-esc="line.product_id.barcode.upper()"/></strong></p>
+                                <div class="text-center">
+                                  <img style="height:55px; width:400px; margin-top:-10px;" t-att-src="'/report/barcode/Code128/%s' % line.product_id.barcode"/>
+                                </div>
+                                <p style="font-size:23px; margin-top:10px;"><span t-esc="line.product_id.name.upper()"/></p>
+                                <p class="text-center" style="margin-top:-10px; font-size:18px;">ORIGEN: <span t-esc="doc.origin.upper()"/></p>
+                                <p class="text-center" style="margin-top:-15px; font-size:18px;"><span t-esc="doc.date_done"/></p>
+                            </div>
+                            
+                            <template id="pruebasdvsupply_layout_footer">
+                                <div class="footer">
+                                    <p class="text-center" style="margin-top:-10px; font-size:28px;"><strong><span t-esc="line.product_uom.name.upper()"/></strong></p>
+                                </div>
+                            </template>
+                            
+                            <p style="page-break-after:always;"/>
+                            
+                        </t>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+    
+</odoo>

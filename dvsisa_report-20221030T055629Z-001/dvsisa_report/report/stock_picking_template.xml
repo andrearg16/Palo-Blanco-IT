@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <template id="stock_picking_custom_report" inherit_id="stock.report_picking">
+            <xpath expr="//div[hasclass('page')]/table[1]" position="replace"> 
+                <table class="table table-bordered table-sm" t-if="o.move_line_ids and o.move_ids_without_package">
+                    <t t-set="has_barcode" t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
+                    <t t-set="has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
+                    <thead>
+                        <t t-if="o.picking_type_id.code == 'incoming'">
+                            <tr style="background-color: #f29d41; color:white;">
+                                <t t-set="colspan_final" t-value="4"/>
+                                <th name="th_product">
+                                    <strong>Producto</strong>
+                                </th>
+                                <th name="th_description">
+                                    <strong>Descripción</strong>
+                                </th>
+                                <th name="th_quantity">
+                                    <strong>Cantidad</strong>
+                                </th>
+                                <th name="th_unity">
+                                    <strong>U.</strong>
+                                </th>
+                                <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
+                                    <strong>De</strong>
+                                    <t t-set="colspan_final" t-value="colspan_final+1"/>
+                                </th>
+                                <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                    <strong>Para</strong>
+                                    <t t-set="colspan_final" t-value="colspan_final+1"/>
+                                </th>
+                                <th name="th_serial_number" class="text-center" t-if="has_serial_number">
+                                   <strong>Lote/Número de Serie</strong>
+                                    <t t-set="colspan_final" t-value="colspan_final+1"/>
+                                </th>
+                                <th name="th_barcode" class="text-center" t-if="has_barcode">
+                                    <strong>Código de barras del producto</strong>
+                                    <t t-set="colspan_final" t-value="colspan_final+1"/>
+                                </th>
+                                <th class="text-center" name="th_description">
+                                    <strong>Costo</strong>
+                                </th>
+                                <th class="text-center" name="th_quantity">
+                                    <strong>Total</strong>
+                                </th>
+                            </tr>
+                        </t>
+                        <t t-else="">
+                            <tr style="background-color: #f29d41; color:white;">
+                                <th name="th_product">
+                                    <strong>Producto</strong>
+                                </th>
+                                <th>
+                                    <strong>Cantidad</strong>
+                                </th>
+                                <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
+                                    <strong>De</strong>
+                                </th>
+                                <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                    <strong>Para</strong>
+                                </th>
+                                <th name="th_serial_number" class="text-center" t-if="has_serial_number">
+                                   <strong>Lote/Número de Serie</strong>
+                                </th>
+                                <th name="th_barcode" class="text-center" t-if="has_barcode">
+                                    <strong>Código de barras del producto</strong>
+                                </th>
+                            </tr>
+                        </t>
+                    </thead>
+                    <tbody>
+                        <t t-if="o.picking_type_id.code == 'incoming'">
+                            <!--  In case you come across duplicated lines, ask NIM or LAP  -->
+                            <t t-set="final_total" t-value="0"/>
+                            <t t-foreach="o.move_line_ids_without_package" t-as="ml">
+                                <tr>
+                                    <td>
+                                        <span t-field="ml.product_id.display_name"/><br/>
+                                    </td>
+                                    <td>
+                                        <span t-field="ml.description_picking"/>
+                                    </td>
+                                    <td>
+                                        <span t-if="o.state != 'done'" t-esc="'{0:,.2f}'.format(ml.product_uom_qty)"/>
+                                        <span t-if="o.state == 'done'" t-esc="'{0:,.2f}'.format(ml.qty_done)"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                    </td>
+                                    <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                        <span t-esc="ml.location_id.display_name"/>
+                                            <t t-if="ml.package_id">
+                                                <span t-field="ml.package_id"/>
+                                            </t>
+                                    </td>
+                                    <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <div>
+                                            <span t-field="ml.location_dest_id"/>
+                                            <t t-if="ml.result_package_id">
+                                                <span t-field="ml.result_package_id"/>
+                                            </t>
+                                        </div>
+                                    </td>
+                                    <td class=" text-center h6" t-if="has_serial_number">
+                                        <div t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-esc="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                                    </td>
+                                    <td class="text-center" t-if="has_barcode">
+                                        <t t-if="product_barcode != ml.product_id.barcode">
+                                            <span t-if="ml.product_id and ml.product_id.barcode">
+                                                <div t-field="ml.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}"/>
+                                            </span>
+                                            <t t-set="product_barcode" t-value="ml.product_id.barcode"/>
+                                        </t>
+                                    </td>
+
+                                    <td>
+                                        <span t-field="o.company_id.currency_id.symbol"/>.
+                                        <span t-esc="ml.product_id.standard_price"/>
+                                    </td>
+
+                                    <td class="text-center">
+                                    
+                                        <span t-if="o.state != 'done'">
+                                            <t t-set ="v1" t-value ="(ml.product_uom_qty * ml.product_id.standard_price)"/>
+                                            <span t-field="o.company_id.currency_id.symbol"/>.
+                                            <span t-esc="'{0:,.2f}'.format(v1)"/>
+                                            <t t-set="final_total" t-value="(final_total + v1)"/>
+                                        </span>
+                                        <span t-if="o.state == 'done'">
+                                            <t t-set ="v2" t-value ="(ml.qty_done * ml.product_id.standard_price)"/>
+                                            <span t-field="o.company_id.currency_id.symbol"/>.
+                                            <span t-esc="'{0:,.2f}'.format(v2)"/>
+                                            <t t-set="final_total" t-value="(final_total + v2)"/>
+                                        </span>
+                                    </td>
+
+                                </tr>
+                            </t>
+
+                            <tr>
+
+                                <t t-if="colspan_final == 4">
+                                    <td colspan="4">
+                                        <p style="font-size:14px;"><strong>Total en Letras:</strong></p>
+                                        <p style="padding-left:10px; margin-top:-12px;"><span t-esc="o.get_num2words(final_total, o.company_id.currency_id.name).upper()"/></p>
+                                    </td>
+                                </t>
+                                <t t-if="colspan_final == 5">
+                                    <td colspan="5">
+                                        <p style="font-size:14px;"><strong>Total en Letras:</strong></p>
+                                        <p style="padding-left:10px; margin-top:-12px;"><span t-esc="o.get_num2words(final_total, o.company_id.currency_id.name).upper()"/></p>
+                                    </td>
+                                </t>
+                                <t t-if="colspan_final == 6">
+                                    <td colspan="6">
+                                        <p style="font-size:14px;"><strong>Total en Letras:</strong></p>
+                                        <p style="padding-left:10px; margin-top:-12px;"><span t-esc="o.get_num2words(final_total, o.company_id.currency_id.name).upper()"/></p>
+                                    </td>
+                                </t>
+                                <t t-if="colspan_final == 7">
+                                    <td colspan="7">
+                                        <p style="font-size:14px;"><strong>Total en Letras:</strong></p>
+                                        <p style="padding-left:10px; margin-top:-12px;"><span t-esc="o.get_num2words(final_total, o.company_id.currency_id.name).upper()"/></p>
+                                    </td>
+                                </t>
+                                <t t-if="colspan_final == 8">
+                                    <td colspan="8">
+                                        <p style="font-size:14px;"><strong>Total en Letras:</strong></p>
+                                        <p style="padding-left:10px; margin-top:-12px;"><span t-esc="o.get_num2words(final_total, o.company_id.currency_id.name).upper()"/></p>
+                                    </td>
+                                </t>
+
+                                <th class="text-center" style="vertical-align: middle; background-color: #f29d41; color:white; font-size:18px;">
+                                    <p style="color:white;"><strong>Total</strong></p>
+                                </th>
+                                
+                                <td class="text-center" style="vertical-align: middle; font-size:18px;">
+                                    <p>
+                                        <strong>
+                                            <span t-field="o.company_id.currency_id.symbol"/>.
+                                            <span t-esc="'{0:,.2f}'.format(final_total)"/>
+                                        </strong>
+                                    </p>
+                                </td>
+                                
+                            </tr>
+                        </t>
+                        <t t-else="">
+                            <!--  In case you come across duplicated lines, ask NIM or LAP -->
+                            <t t-foreach="o.move_line_ids_without_package" t-as="ml">
+                                <tr>
+                                    <td>
+                                        <span t-field="ml.product_id.display_name"/><br/>
+                                        <span t-field="ml.product_id.description_picking"/>
+                                    </td>
+                                    <td>
+                                        <span t-if="o.state != 'done'" t-field="ml.product_uom_qty"/>
+                                        <span t-if="o.state == 'done'" t-field="ml.qty_done"/>
+                                        <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                    </td>
+                                    <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                        <span t-esc="ml.location_id.display_name"/>
+                                            <t t-if="ml.package_id">
+                                                <span t-field="ml.package_id"/>
+                                            </t>
+                                    </td>
+                                    <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <div>
+                                            <span t-field="ml.location_dest_id"/>
+                                            <t t-if="ml.result_package_id">
+                                                <span t-field="ml.result_package_id"/>
+                                            </t>
+                                        </div>
+                                    </td>
+                                    <td class=" text-center h6" t-if="has_serial_number">
+                                        <div t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-esc="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                                    </td>
+                                    <td class="text-center" t-if="has_barcode">
+                                        <t t-if="product_barcode != ml.product_id.barcode">
+                                            <span t-if="ml.product_id and ml.product_id.barcode">
+                                                <div t-field="ml.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}"/>
+                                            </span>
+                                            <t t-set="product_barcode" t-value="ml.product_id.barcode"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        
+                    </tbody>
+                </table>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="sale_remmission_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.basic_layout" style="position:static;">
+                      
+                        <template id="invoice_fel_template_layout_header">
+                            <div class="header"  width="100%">
+                              
+                                <div style="margin-bottom:5px; padding-bottom:5px;" class="mb-2">
+                                    <div class="col-3 float-left">
+                                        <div>
+                                            <img class="img-fluid" t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" alt="Logo" style="max-width: 150px; padding-top:0px;"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 float-left">
+                                        <p class="font-size:30px"><strong>REMISIÓN DE VENTAS</strong><br/>
+                                            <strong><span t-esc="doc.name"/></strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-5 float-left text-right">
+                                        <img style="height:60px" t-att-src="'/report/barcode/Code128/%s' % doc.name"/>
+                                    </div>
+                                </div>
+                                
+                                <br/>
+                                <br/>
+                                <br/>
+                                
+                                <div>
+                                    <div class="col-12">
+                                        <table class="table table-borderless" style="font-size:11px;">
+                                            <thead>
+                                                <tr>
+                                                    <td width="60px" style="padding:4px; border:1px solid black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Cliente</span><br/>
+                                                        <t t-if="doc.partner_id.parent_id">
+                                                            <span t-esc="doc.partner_id.parent_id.ref"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="doc.partner_id.ref"/>
+                                                        </t>
+                                                    </td>
+                                                    <td width="300px" style="margin:4px; padding:5px; border:1px solid black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Nombre</span><br/>
+                                                        <t t-if="doc.partner_id.parent_id">
+                                                            <span t-esc="doc.partner_id.parent_id.name"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="doc.partner_id.name"/>
+                                                        </t>
+                                                    </td>
+                                                    <td width="60px" style="padding:4px; border:1px solid black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Pedido</span><br/>
+                                                        <t t-if="doc.ref_sale_order">
+                                                            <span t-esc="doc.ref_sale_order.name"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-esc="doc.origin"/>
+                                                        </t>
+                                                    </td>
+                                                    <td width="110px" style="padding:4px; border:1px solid black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Fecha Pedido</span><br/>
+                                                        <span t-field="doc.ref_sale_order.create_date"/>
+                                                    </td>
+                                                    <td width="110px" style="padding:4px; border:1px solid black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Fecha Autorización</span><br/>
+                                                        <span t-field="doc.ref_sale_order.date_order"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="margin:5px; padding:4px; border:1px solid black;" colspan="2">
+                                                        <span class="font-weight-bold" style="color:#254684;">Contacto</span><br/>
+                                                        <t t-if="doc.partner_id.parent_id">
+                                                          <span t-esc="doc.partner_id.name"/>
+                                                        </t>
+                                                    </td>
+                                                    <td style="margin:5px; padding:4px; border:1px solid black;" colspan="2">
+                                                        <span class="font-weight-bold" style="color:#254684;">Teléfono</span><br/>
+                                                        <span t-esc="doc.partner_id.phone"/>
+                                                    </td>
+                                                    <td style="margin:5px; padding:4px; border:1px solid black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Fecha Doc.</span><br/>
+                                                        <!--span t-esc="doc.scheduled_date"/-->
+                                                        <!--span t-esc="datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')"/-->
+                                                        
+                                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M:%S')"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="margin:5px; padding:4px; border:1px solid black; background-color:white; color:black;" colspan="3">
+                                                        <span class="font-weight-bold" style="color:#254684;">Dirección</span><br/>
+                                                        <span t-esc="doc.partner_id.street"/>
+                                                        <t t-if="doc.partner_id.street2">
+                                                            , <span t-esc="doc.partner_id.street2"/>
+                                                        </t>
+                                                        <t t-if="doc.partner_id.city">
+                                                            , <span t-esc="doc.partner_id.city"/>, 
+                                                        </t>
+                                                        <t t-if="doc.partner_id.state_id">
+                                                            , <span t-esc="doc.partner_id.state_id.name"/>
+                                                        </t>
+                                                        <t t-if="doc.partner_id.zip">
+                                                            <span t-esc="doc.partner_id.zip"/>
+                                                        </t>
+                                                        <t t-if="doc.partner_id.municipality_id">
+                                                            , <span t-esc="doc.partner_id.municipality_id.name"/>, 
+                                                            <span t-esc="doc.partner_id.zone"/>
+                                                        </t>
+                                                        <t t-if="doc.partner_id.country_id">
+                                                            , <span t-esc="doc.partner_id.country_id.name"/>
+                                                        </t>
+                                                    </td>
+                                                    <td colspan="2" style="margin:4px; padding:5px; border:1px solid black; background-color:white; color:black;">
+                                                        <span class="font-weight-bold" style="color:#254684;">Centro de Costo</span><br/>
+                                                        <t t-if="doc.user_id.cost_center_id">
+                                                            <span t-esc="doc.user_id.cost_center_id.name"/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                        
+                            </div>  
+                        </template>
+
+                        
+                        
+
+                        <div class="page container-fluid" style="font-size:11px;">
+                            <style>
+                                .marginx {
+                                    margin-top: -1.35em;
+                                }
+                            </style>
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-borderless">
+                                        <thead>
+                                            <tr style="background-color: #BBC2CD; color:white;">
+                                                <th class="text-center" style="font-size:12px; padding:5px; border:1px solid black; background-color: #CBCBCB; color:#254684;">
+                                                    <span class="font-weight-bold">#</span>
+                                                </th>
+                                                <th class="text-center" style="font-size:12px; padding:5px; border:1px solid black; background-color: #CBCBCB; color:#254684;">
+                                                    <span class="font-weight-bold">SKU</span>
+                                                </th>
+                                                <th class="text-center" style="font-size:12px; padding:5px; border:1px solid black; background-color: #CBCBCB; color:#254684;">
+                                                    <span class="font-weight-bold">Descripción</span>
+                                                </th>
+                                                <th class="text-center" style="font-size:12px; padding:5px; border:1px solid black; background-color: #CBCBCB; color:#254684;">
+                                                    <span class="font-weight-bold">Unidad</span>
+                                                </th>
+                                                <th class="text-center" style="font-size:12px; padding:5px; border:1px solid black; background-color: #CBCBCB; color:#254684;">
+                                                    <span class="font-weight-bold">Cantidad</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="line_number" t-value="1"/>
+                                            <t t-set="line_quantity" t-value="0"/> 
+                                            <t t-foreach="doc.move_line_ids_without_package" t-as="line">
+                                                <tr>
+                                                    <td class="text-center" style="padding:3px; border:1px solid black;">
+                                                       <t t-esc="line_number"/>
+                                                    </td>
+                                                    <td class="text-left" style="padding:3px; border:1px solid black;">
+                                                       <t t-esc="line.product_id.default_code"/>
+                                                    </td>
+                                                    <td class="text-left" style="padding:3px; border:1px solid black;">
+                                                       <t t-esc="line.product_id.name"/>
+                                                    </td>
+                                                    <td class="text-center" style="padding:3px; border:1px solid black;">
+                                                        <t t-esc="line.product_uom_id.name"/>
+                                                    </td>
+                                                    <td class="text-center" style="padding:3px; border:1px solid black;">
+                                                        
+                                                            <t t-if="line.qty_done">
+                                                                <t t-esc="int(line.qty_done)"/>
+                                                            </t>
+                                                
+                                                    </td>
+                                                </tr>
+                                                <t t-set="line_number" t-value="line_number + 1"/>
+                                                <t t-set="line_quantity" t-value="line_quantity+line.qty_done" /> 
+                                            </t>
+                                            <tr>
+                                                <td class="text-right" style="margin:5px; padding:5px; border:1px solid black; font-size:14px; background-color:#E9ECEF; color:black;" colspan="3">
+                                                   <strong>Total</strong>
+                                                </td>
+                                              
+                                                <td class="text-right" style="margin:5px; padding:5px; border:1px solid black; font-size:14px; background-color:#E9ECEF; color:black;">
+                                                    
+                                                    <strong>Q. <t t-esc="'{0:,.2f}'.format(doc.amount_total_done)"/></strong>
+                                                </td>
+                                                <td class="text-center" style="margin:5px; padding:5px; border:1px solid black; font-size:14px; background-color:#E9ECEF; color:black;">
+                                                    <strong><t t-esc="'{0:,.0f}'.format(line_quantity)" /></strong>
+                                                </td>
+                                            </tr>
+                                            
+                                         
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-12">
+                                    <table class="table table-borderless">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center" style="margin:15px; padding:15px; border:1px solid black; background-color:white; color:black;">
+                                                    <p><strong>Bultos</strong></p>
+                                                    <p>
+                                                        <t t-if="doc.boxes">
+                                                            <span><t t-esc="doc.boxes"/></span>
+                                                        </t>
+                                                    </p>
+                                                </td>
+                                                <td class="text-center" style="margin:15px; padding:15px; border:1px solid black; background-color:white; color:black;">
+                                                    <p><strong>Fecha Despacho</strong></p>
+                                                    <p style="color:white;"><span>xxx</span></p>
+                                                </td>
+                                                <td class="text-center" style="margin:15px; padding:15px; border:1px solid black; background-color:white; color:black;">
+                                                    <p><strong>Fecha Recepción</strong></p>
+                                                    <p style="color:white;"><span>xxx</span></p>
+                                                </td>
+                                                <td class="text-center" style="margin:15px; padding:15px; border:1px solid black; background-color:white; color:black;">
+                                                    <p><strong>Recibí Conforme</strong></p>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <template id="sale_remmission_template_layout_footer" style="font-size:12px;">
+                            <div t-attf-class="footer">
+                                <div class="col-12 text-center" style="font-size:13px;">
+                                    Pág <span class="page"/> de <span class="topage"/>
+                                </div>
+                            </div>
+                        </template>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
