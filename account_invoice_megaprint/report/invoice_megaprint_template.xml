@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="invoice_fel_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+
+                    <div class="page" style="font-size: 11px;">
+                        <style>
+                            hr {
+                                border-top: 2px solid gray;
+                            }
+  
+                            .bd {
+                                border-right: 1px solid black;
+                            }
+                            .bi {
+                                border-left: 1px solid black;
+                            }
+                            .tableparentdiv::-webkit-scrollbar {
+                            display: none;
+                            }
+  
+                            /* Hide scrollbar for IE, Edge and Firefox */
+                            .tableparentdiv {
+                            -ms-overflow-style: none;  /* IE and Edge */
+                            scrollbar-width: none;  /* Firefox */
+                            }
+                        </style>
+                        
+                        <template id="pruebasdvsupply_layout_header">
+                            <div class="header">
+                                <div class="row justify-content-between">
+                                    <div class="col-3 text-left" align="center" style="padding-top:15px;">
+                                        <img class="img-fluid" t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="height:90px; width:240px;" alt="Logo"/>
+                                    </div>
+                                    <div class="col-5 text-center" style="padding-top:15px;">
+                                        <p style="font-size: 14px; font-weight:bold;"><span t-esc="o.company_id.nombre_comercial.upper()"/> - <span t-esc="o.company_id.name.upper()"/></p>
+                                        <t t-if="o.company_id.street or o.company_id.street2">
+                                            <p style="font-size: 11px; margin-top:-15px; font-weight:bold;">
+                                                <t t-if="o.company_id.street">
+                                                    <span t-esc="o.company_id.street.upper()"/>, 
+                                                </t>
+                                                <t t-if="o.company_id.street2">
+                                                    <span t-esc="o.company_id.street2.upper()"/>
+                                                </t>
+                                            </p>
+                                        </t>
+                                        <t t-if="o.company_id.state_id or o.company_id.country_id">
+                                            <p style="font-size: 12px; margin-top:-15px; font-weight:bold;">
+                                                <t t-if="o.company_id.state_id">
+                                                    <span t-esc="o.company_id.state_id.name.upper()"/>, 
+                                                </t>
+                                                <t t-if="o.company_id.country_id">
+                                                    <span t-esc="o.company_id.country_id.name.upper()"/>
+                                                </t>
+                                            </p>
+                                        </t>
+                                        <t t-if="o.company_id.phone">
+                                            <p style="font-size: 12px; margin-top:-15px; font-weight:bold;">PBX: <span t-esc="o.company_id.phone"/></p>
+                                        </t>
+                                        <p style="font-size: 12px; margin-top:-15px; font-weight:bold;">NIT: <span t-esc="o.company_id.vat"/></p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="text-center" style="font-size: 13px; font-weight:bold;">DOCUMENTO TRIBUTARIO ELECTRONICO</p>
+                                        <p class="text-center" style="font-size: 13px; margin-top:-10px; font-weight:bold; text-transform: uppercase;">
+                                          
+                                            <t t-if="o.move_type == 'out_refund'">
+                                            NOTA DE CRÉDITO
+                                            </t>
+                                            <t t-if="o.move_type == 'out_invoice' and o.journal_id.factura_cambiaria">
+                                            FACTURA ELECTRONICA CAMBIARIA
+                                            </t>
+                                            <t t-if="o.move_type == 'out_invoice' and o.journal_id.is_factura_especial">
+                                            FACTURA ESPECIAL
+                                            </t>
+                                            <t t-if="o.move_type == 'out_invoice' and not o.journal_id.is_factura_especial and not o.journal_id.factura_cambiaria">
+                                            FACTURA
+                                            </t>
+                                            
+                                        </p>
+                                        <div style="margin-top:-15px;">
+                                            <table class="table table-borderless" style="border-collapse:separate; border:solid black 2px; border-radius:8px; background-color:#F4F4F4;">
+                                                <tr>
+                                                    <td width="20%;" style="font-size:12px; padding-bottom:2px;">Serie:</td>
+                                                    <td width="80%;" style="font-size:12px; padding-bottom:2px; font-weight:bold;"><span t-esc="o.fel_serie"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="20%;" style="font-size:12px; padding-top:2px;">No.:</td>
+                                                    <td width="80%;" style="font-size:12px; padding-top:2px; font-weight:bold;"><span t-esc="o.fel_no"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-3 mb-2">
+                                    <div class="col-8">
+                                        <div>
+                                            <table class="table table-borderless" style="border-collapse:separate; border:solid black 2px; border-radius:8px; background-color:#F4F4F4;">
+                                                <tr>
+                                                    <td style="font-size:12px; padding-bottom:2px; font-weight:bold;"><p t-esc="o.partner_id.name.upper()"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:12px; padding-top:2px;">
+                                                        <p style="font-size: 11px; margin-top:-15px;">
+                                                            <t t-if="o.partner_id.street or o.partner_id.street2">
+                                                                <t t-if="o.partner_id.street">
+                                                                    <span t-esc="o.partner_id.street.upper()"/>, 
+                                                                </t>
+                                                                <t t-if="o.partner_id.street2">
+                                                                    <span t-esc="o.partner_id.street2.upper()"/>
+                                                                </t>
+                                                            </t>
+                                                            <t t-if="o.partner_id.state_id or o.partner_id.country_id">
+                                                                <t t-if="o.partner_id.state_id">
+                                                                    <span t-esc="o.partner_id.state_id.name.upper()"/>, 
+                                                                </t>
+                                                                <t t-if="o.partner_id.country_id">
+                                                                    <span t-esc="o.partner_id.country_id.name.upper()"/>
+                                                                </t>
+                                                            </t>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-4" style="margin-top:17px;">
+                                      
+                                        <t t-if="o.move_type != 'out_refund'">
+     
+                                        <div>
+                                            <p class="text-center" style="font-size: 11px; font-weight:bold;">LIBRE DE PROTESTO</p>
+                                            <p class="text-center" style="font-size: 10px; margin-top:-15px; font-weight:bold;">(En las condiciones estipuladas en este Título)</p>
+                                        </div>
+                                          </t>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <div>
+                                            <table class="table table-borderless" style="border-collapse:separate; border:solid black 2px; border-radius:10px;">
+                                                <tr>
+                                                    <td style="padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">FECHA FACTURA:</p> 
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;" t-esc="o.invoice_date"/>
+                                                    </td>
+                                                    <td style="padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">CLIENTE:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;">
+                                                            <t t-if="o.partner_id.ref">
+                                                                <span t-esc="o.partner_id.ref.upper()"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span t-esc="o.partner_id.name.upper()"/>
+                                                            </t>
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">NIT:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;" t-esc="o.partner_id.vat"/>
+                                                    </td>
+                                                    <td style="padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">CONTRATO NO.:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;">
+                                                            <t t-if="o.contract_id">
+                                                                <span t-esc="o.contract_id.name"/>
+                                                            </t>
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-bottom:2px; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">FOLIO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;"><span class="page"/> de <span class="topage"/></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border-top:2px solid black; padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">VENCIMIENTO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;" t-esc="o.invoice_date_due"/>
+                                                    </td>
+                                                    <td style="border-top:2px solid black; padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">DOC. INTERNO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;" t-esc="o.name"/>
+                                                    </td>
+                                                    <td style="border-top:2px solid black; padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                       
+                                                      <t t-if="o.move_type != 'out_refund'">   
+                                                        <p style="font-size:10px; font-weight:bold;">ORDEN DE COMPRA:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;">
+                                                            <span t-esc="o.ref"/>
+                                                        </p>
+                                                      </t> 
+                                                      <t t-if="o.move_type == 'out_refund'">   
+                                                        <p style="font-size:10px; font-weight:bold;">DOC. AFECTO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;">
+                                                            <span t-esc="o.invoice_refund_id.fel_serie"/> <span t-esc="o.invoice_refund_id.fel_no"/>
+                                                        </p>
+                                                      </t> 
+                                                        
+                                                    </td>
+                                                    <td style="border-top:2px solid black; padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        
+                                                       <t t-if="o.move_type != 'out_refund'">  
+                                                        <p style="font-size:10px; font-weight:bold;">CONDICIONES DE PAGO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;">
+                                                            <t t-if="o.invoice_payment_term_id">
+                                                                <span t-esc="o.invoice_payment_term_id.name"/>
+                                                            </t>
+                                                        </p>
+                                                      </t> 
+                                                      <t t-if="o.move_type == 'out_refund'">  
+                                                          <p style="font-size:10px; font-weight:bold;">FECHA DOC. AFECTO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;">
+                                                          
+                                                                <span t-esc="o.invoice_refund_id.invoice_date"/>
+                                                           
+                                                        </p>
+                                                      </t> 
+                                                        
+                                                        
+                                                    </td>
+                                                    
+                                                    <td style="border-top:2px solid black; padding-bottom:2px; margin:2px; padding-top:0px; padding-bottom:0px;">
+                                                        <p style="font-size:10px; font-weight:bold;">CENTRO DE COSTO:</p>
+                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px;">
+                                                            <t t-if="o.cost_center_id">
+                                                                <span t-esc="o.cost_center_id.name"/>
+                                                            </t>
+                                                        </p>
+                                                    </td>
+                                                    
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </template>
+                        
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12 tableparentdiv" style="min-height: 585px; padding: 0px; overflow: hidden;">
+                                    <table style="height: 100%; width: 100%; font-size:11px; border-collapse:separate; border-top:solid black 2px; border-right:solid black 2px;  border-left:solid black 2px;">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%" class="text-center" style="vertical-align: middle; background-color: #07375F; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">CÓDIGO ARTÍCULO</th>
+                                                <th width="15%" class="text-center" style="vertical-align: middle; background-color: #07375F; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">CANTIDAD</th>
+                                                <th width="40%" class="text-center" style="vertical-align: middle; background-color: #07375F; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">DESCRIPCIÓN</th>
+                                                <th width="15.2%" class="text-center" style="vertical-align: middle; background-color: #07375F; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">PRECIO UNITARIO</th>
+                                                <th width="14.8%" class="text-center" style="vertical-align: middle; background-color: #07375F; color: white; margin: 7px; padding:7px; border-bottom: 2px solid black; font-size: 12px">TOTAL</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="current_subtotal" t-value="0"/>
+                                            <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)"/>
+                                            <t t-set="used_product" t-value="o.get_used_product(lines)"/>
+                                            <t t-set="lineas_totales" t-value="0"/>
+                                            <t t-set="total_fe" t-value="0"/>
+                                            <t t-foreach="used_product" t-as="line">
+                                                <t t-set="lineas_totales" t-value="lineas_totales + 1"/>
+                                                <tr>
+                                                    <td class="text-center" style="border-right: 2px solid black;"><span t-esc="line['default_code']"/></td>
+                                                    <td class="text-center" style="border-right: 2px solid black;"><span t-esc="line['quantity']"/></td>
+                                                    <td class="text-justify" style="padding-left:5px; border-right: 2px solid black;"><span t-esc="line['product_name']"/></td>
+                                                    <td class="text-right" style="padding-right:5px; border-right: 2px solid black;"><span style="padding-left:5px;" class="float-left" t-esc="line['currency_symbol']"/> <span t-esc="line['price_unit']"/></td>
+                                                    <td class="text-right" style="padding-right:5px;">
+                                                        <t t-if="o.journal_id.is_factura_especial == False">
+                                                            <span style="padding-left:5px;" class="float-left" t-esc="o.currency_id.symbol"/>
+                                                            <span t-esc="'{0:,.2f}'.format(line['price_total'])"/>
+                                                        </t>
+                                                        <t t-elif="o.journal_id.is_factura_especial">
+                                                            <span style="padding-left:5px;" class="float-left" t-esc="o.currency_id.symbol"/>
+                                                            <span t-esc="'{0:,.2f}'.format(line['fe_total_line_amount'])"/>
+                                                            <t t-set="total_fe" t-value="total_fe + line['fe_total_line_amount']"/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="lineas_totales &lt;= 35">
+                                              <t t-set="lineas_left" t-value="(35 - lineas_totales)"/>
+                                              <tr t-foreach="range(lineas_left)" t-as="l" style="color:white;">
+                                                  <td class="text-center" style="border-right: 2px solid black;">1</td>
+                                                  <td class="text-center" style="border-right: 2px solid black;">1</td>
+                                                  <td class="text-left" style="border-right: 2px solid black;">1</td>
+                                                  <td class="text-right" style="border-right: 2px solid black;">1</td>
+                                                  <td class="text-right">1</td>
+                                              </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <table width="100%" style="font-size:11px; border-collapse:separate;">
+                                    <tr>
+                                        <th width="15.2%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-left: 2px solid black; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                        <th width="15%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                        <th width="39.8%" class="text-center" style="vertical-align: middle; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">
+                                            <t t-foreach="o.frase_ids" t-as="frase">
+                                                <span t-esc="frase.name"/>
+                                            </t>
+                                        </th>
+                                        <th width="15.1%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                        <th width="15.1%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="row">
+                                <div style="width:100%;">
+                                    <table class="table table-borderless" style="border: 2px solid black;">
+                                        <tr>
+                                            <td width="85%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; border-bottom: 2px solid black;" colspan="3"><strong>TOTAL EN LETRAS:</strong> <span t-esc="o.get_num2words(o.amount_total, o.currency_id.name).upper()"/></td>
+                                            <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4;" class="text-center"/>
+                                        </tr>
+                                        <tr>
+                                            <td width="40%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;"><strong>Autorización:</strong> <span t-esc="o.uuid"/></td>
+                                            <td width="45%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; border-bottom: 2px solid black;" colspan="2"><strong>Fecha de Certificación:</strong> <span t-esc="o.fel_date"/></td>
+                                            <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;" class="text-center"/>
+                                        </tr>
+                                        <tr>
+                                            <td width="70%" class="text-justify" style="font-size:12px; vertical-align: middle; font-size:9px; margin:5px; padding:5px; border-right: 2px solid black;" colspan="2">
+                                              <t t-if="o.move_type != 'out_refund'"> 
+                                                En las condiciones de pago que se indican en esta Factura Cambiaria se sirva(n) usted(es) pagar ésta única, girada
+                                                libre de protesto a la orden o endoso de Díaz Vélez Soluciones Integrales, S.A. el valor total por el que está
+                                                extendida. Valor recibido que asentará(n) usted(es) en cuenta,según nuestro aviso.
+                                              </t>  
+                                            </td>
+                                            <th width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; background-color: #07375F; color: white;" class="text-center">Total</th>
+                                            <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4;" class="text-right"><strong><span class="float-left" t-esc="o.currency_id.symbol"/> <span t-esc="'{0:,.2f}'.format(o.amount_total)"/></strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <template id="pruebasdvsupply_layout_footer">
+                            <div class="footer">
+                                <div class="row">
+                                    <div class="col-6 float-left" style="font-size:11px;">
+                                        <p style="font-size:9px;">Esta factura no se considera cancelada, si no se acompaña el recibo de caja correspondiente.</p>
+                                        <div class="float-left">
+                                            <img class="img img-responsive" src="/account_invoice_megaprint/static/src/img/fel3.jpg" style="width:115px;"/>
+                                        </div>
+                                        <div class="float-left" style="margin-top:6px; padding-top:6px; padding-left:16px;">
+                                            <p>CERTIFICADOR: MEGAPRINT, SOCIEDAD ANONIMA</p>
+                                            <p style="margin-top:-15px;">NIT: 50510231</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 float-left">
+                                        <span class="text-justify">
+                                            <p style="font-size:9px;">NOTAS: LE ROGAMOS PAGAR CON CHEQUE NO NEGOCIABLE A FAVOR DE Díaz Vélez Soluciones Integrales, S.A.</p>
+                                            <p style="margin-top:-15px; font-size:9px;">1) Esta factura causará intereses por mora del 3.75% por mes o proporcional a partir de la fecha acordada para el pago.</p>
+                                            <p style="margin-top:-15px; font-size:9px;">2) El comprador estará obligado al pago del valor de los artículos facturados a medida que lo vaya recibiendo asi no se haya despachado la totalidad del pedido.</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

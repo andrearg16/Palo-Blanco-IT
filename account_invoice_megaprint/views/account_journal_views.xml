@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_digifact_form" model="ir.ui.view">
+        <field name="name">account.journal.digifact.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="before">
+                <field name="is_fel" groups="account_invoice_megaprint.group_request_response_fel_manager"/>
+                <field name="codigo_est" attrs="{'invisible': [('is_fel', '=', False)], 'required': [('is_fel', '=', True)]}" groups="account_invoice_megaprint.group_request_response_fel_manager"/>
+                <field name="factura_cambiaria" groups="account_invoice_megaprint.group_request_response_fel_manager"/>
+                <field name="is_factura_especial" attrs="{'invisible': [('is_fel', '=', False), ('type', '!=', 'purchase')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_tax_form_extends" model="ir.ui.view">
+        <field name="name">account.tax.form.extends</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="amount_type" position="before">
+                <field name="active_fel" widget="boolean_toggle"/>
+            </field>
+            <field name="tax_scope" position="before">
+                <field name="type_fel" attrs="{'invisible': [('active_fel', '=', False)], 'required' :[('active_fel', '=', True)]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
