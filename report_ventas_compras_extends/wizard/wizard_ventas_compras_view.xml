@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+ 	<record id="wizard_ventas_compras_form_extends" model="ir.ui.view">
+		<field name="name">wizard.ventas.compras.form.extends</field>
+		<field name="model">wizard.ventas.compras</field>
+		<field name="priority">5</field>
+		<field name="inherit_id" ref="report_ventas_compras.wizard_ventas_compras_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='type_report']" position="attributes">
+				<attribute name="invisible">0</attribute>
+			</xpath>
+            <xpath expr="//field[@name='type_report']" position="after">
+				<field name="file_name" invisible="1"/>
+                <field name="file" invisible="1"/>
+			</xpath>
+            <xpath expr="//button[@name='print_report_sale']" position="attributes">
+				<attribute name="attrs">{'invisible': ['|', ('type_book','=','purchase'), ('type_report', '=', 'xls')]}</attribute>
+			</xpath>
+            <xpath expr="//button[@name='print_report_sale']" position="after">
+				<button name="print_sale_excel" string="Generar Excel" attrs="{'invisible': ['|', ('type_book','=','purchase'), ('type_report', '=', 'pdf')]}" type="object" class="btn-primary"/>
+			</xpath>
+            <xpath expr="//button[@name='print_report_purchase']" position="attributes">
+				<attribute name="attrs">{'invisible': ['|', ('type_book','=','sale'), ('type_report', '=', 'xls')]}</attribute>
+			</xpath>
+            <xpath expr="//button[@name='print_report_purchase']" position="after">
+				<button name="print_purchase_excel" string="Generar Excel" attrs="{'invisible': ['|', ('type_book','=','sale'), ('type_report', '=', 'pdf')]}" type="object" class="btn-primary"/>
+			</xpath>
+		</field>
+	</record>
+
+
+</odoo>

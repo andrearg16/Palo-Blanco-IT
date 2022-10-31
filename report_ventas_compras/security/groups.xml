@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="group_report_ventas_compras" model="res.groups">
+            <field name="name">Reporte de Ventas y Compras: Administrador</field>
+        </record>
+
+    </data>
+</odoo>

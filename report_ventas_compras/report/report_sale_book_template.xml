@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_sale_book">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="data" t-as="folio">
+                    <div class="page" style="font-size:12px;">
+                        <t t-value="ultima" t-set="final"/>
+                        <t t-set="o" t-value="docs"/>
+                        
+                        <template id="report_purchase_book_header">
+                            <div class="header" style="font-size:14px;">
+                                <div>FOLIO: <span class="page"/></div>
+                                <div>
+                                    <center><strong><span t-field="o.company_id"/></strong></center>
+                                    <center><strong>NIT: <span t-field="o.company_id.vat"/></strong></center>
+                                    <center class="mb-2"><strong>Del <span t-esc="o.date_from"/> al <span t-esc="o.date_to"/></strong></center>
+                                    
+                                    <center><strong>Libro de Ventas</strong></center>
+                                    <center><strong>(Cifras Expresadas en Quetzales)</strong></center>
+                                </div>
+                            </div>  
+                        </template>
+                        
+                        <table class="text-center table table-borderless table-sm table-x">
+                            <thead>
+                                
+                                <tr>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>Fecha</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>Doc.</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>No. <br/>Interno</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>Serie</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>No.</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>NIT</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>Nombre del Cliente</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="1" colspan="2"><strong>Base Gravada</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="1" colspan="2"><strong>Base Exenta</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>IVA</strong></th>
+                                    <th class="title-border-x" style="vertical-align: middle;" rowspan="2" colspan="1"><strong>Total</strong></th>
+                                </tr>
+                                
+                                <tr style="border-bottom: 3px solid black;">
+                                    <th class="title-border-x" rowspan="1" colspan="1"><strong>Bienes</strong></th>
+                                    <th class="title-border-x" rowspan="1" colspan="1"><strong>Servicios</strong></th>
+                                    
+                                    
+                                    <th class="title-border-x" rowspan="1" colspan="1"><strong>Bienes</strong></th>
+                                    <th class="title-border-x" rowspan="1" colspan="1"><strong>Servicios</strong></th>
+                                </tr>
+                                
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="folio[1]" t-as="line">
+                                
+                                    <td class="border-x"><span t-esc="line.get('fecha', '')"/></td>
+                                    <td class="border-x"><span t-esc="line.get('tipo', '')"/></td>
+                                    <td class="border-x"><span t-esc="line.get('move_name', '')"/></td>
+                                    <td class="border-x"><span t-esc="line.get('serie', '')"/></td>
+                                    <td class="border-x"><span t-esc="line.get('numero', '')"/></td>
+                                    <td class="border-x"><span t-esc="line.get('nit_cliente', '')"/></td>
+                                    <td class="border-x text-left"><span t-esc="line.get('cliente', '')"/></td>
+                                    
+                                    <td class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(line.get('bienes_gravados', ''), company_id.currency_id)"/></td>
+                                    <td class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(line.get('servicios_gravados', ''), company_id.currency_id)"/></td>
+
+                                    <td class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(line.get('bienes_exentos', ''), company_id.currency_id)"/></td>
+                                    <td class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(line.get('servicios_exentos', ''), company_id.currency_id)"/></td>
+                                    
+                                    <td class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(line.get('iva', ''), company_id.currency_id)"/></td>
+                                    <td class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(line.get('subtotal', ''), company_id.currency_id)"/></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="border-x" colspan="6"/>
+                                    <td class="border-x text-left"><strong><span t-esc="final.get('cliente', '')"/></strong></td>
+                                    <td class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_bienes_gravados', ''), company_id.currency_id)"/></strong></td>
+                                    <td class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_servicios_gravados', ''), company_id.currency_id)"/></strong></td>
+
+                                    <td class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_bienes_exentos', ''), company_id.currency_id)"/></strong></td>
+                                    <td class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_servicios_exentos', ''), company_id.currency_id)"/></strong></td>
+
+                                    <td class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_iva_final', ''), company_id.currency_id)"/></strong></td>
+                                    <td class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_subtotal_final', ''), company_id.currency_id)"/></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                    </div>
+                </t>
+
+                <p style="page-break-after:always;"/>
+
+                <div class="page">
+                    
+                    <div class="col-12 text-center" style="margin-bottom:35px;">
+                        <center><strong><h4>RESUMEN</h4></strong></center>
+                    </div>
+                    
+                    <div class="col-4 float-left" style="position:relative;">
+                        <div style="border: 2px solid black; padding:20px; position:relative; width:420px;">
+                            <table class="text-center table-x" style="margin:0 auto;">
+                                <tr>
+                                    <td class="border-x text-center" colspan="2">
+                                        <center><strong>TOTALES POR FACTURAS</strong></center>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-x text-center" colspan="2" style="color:white;">
+                                        <center><strong>R E S U M E N</strong></center>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left" style="border-bottom: 1px solid black;">TIPO</th>
+                                    <th width="40%" class="border-x text-right" style="border-bottom: 1px solid black;">MONTO</th>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left">TOTAL BIENES GRAVADOS</th>
+                                    <td width="40%" class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_bienes_gravados', ''), company_id.currency_id)"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left">TOTAL SERVICIOS GRAVADOS</th>
+                                    <td width="40%" class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_servicios_gravados', ''), company_id.currency_id)"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left">TOTAL BIENES EXENTOS</th>
+                                    <td width="40%" class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_bienes_exentos', ''), company_id.currency_id)"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left">TOTAL SERVICIOS EXENTOS</th>
+                                    <td width="40%" class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_servicios_exentos', ''), company_id.currency_id)"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left">TOTAL IVA</th>
+                                    <td width="40%" class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_iva_final', ''), company_id.currency_id)"/></td>
+                                </tr>
+                                <tr>
+                                    <th width="60%" class="border-x text-left">**TOTAL**</th>
+                                    <td width="40%" class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_subtotal_final', ''), company_id.currency_id)"/></strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-left:440px;">
+                        <div class="col-8 float-right ml-4" style="border: 2px solid black; padding:20px; position:absolute;">
+                            <table class="text-center table-x" style="margin:0 auto;">
+                                <tr>
+                                    <td class="border-x text-center" colspan="5">
+                                        <center><strong>TOTALES POR CLIENTES</strong></center>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="5%" class="border-x text-center" style="border-bottom: 1px solid black; vertical-align: middle;">NO.</th>
+                                    <th width="50%" class="border-x text-left" style="border-bottom: 1px solid black; vertical-align: middle;">CLIENTE</th>
+                                    <th width="15%" class="border-x text-center" style="border-bottom: 1px solid black; vertical-align: middle;">NIT</th>
+                                    <th width="15%" class="border-x text-center" style="border-bottom: 1px solid black; vertical-align: middle;">NUM. DE FACTURAS</th>
+                                    <th width="50%" class="border-x text-right" style="border-bottom: 1px solid black; vertical-align: middle;">TOTAL DE FACTURAS</th>
+                                </tr>
+                                <t t-set="partner_resume" t-value="1"/>
+                                <tr t-foreach="final.get('company_fac_total', '')" t-as="total_fac">
+                                    <th width="5%" class="border-x text-center"><span t-esc="partner_resume"/></th>
+                                    <th width="500px;" class="border-x text-left"><span t-esc="total_fac"/></th>
+                                    <th width="10%" class="border-x text-center"><span t-esc="final.get('company_fac_total', '').get(total_fac)[2]"/></th>
+                                    <td width="25%" class="border-x text-center"><span t-esc="final.get('company_fac_total', '').get(total_fac)[0]"/></td>
+                                    <td width="25%" class="border-x text-right"><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('company_fac_total', '').get(total_fac)[1], company_id.currency_id)"/></td>
+                                    <t t-set="partner_resume" t-value="partner_resume+1"/>
+                                </tr>
+                                <tr>
+                                    <th width="500px;" class="border-x text-left" colspan="2"></th>
+                                    <th width="500px;" class="border-x text-center">**TOTAL**</th>
+                                    <td width="25%" class="border-x text-center" style="border-bottom: medium double; border-top: solid;"><strong><span t-esc="final.get('total_no_fac', '')"/></strong></td>
+                                    <td width="25%" class="border-x text-right" style="border-bottom: medium double; border-top: solid;"><strong><span t-field="o.company_id.currency_id.symbol"/>. <span t-esc="format_price(final.get('total_subtotal_final', ''), company_id.currency_id)"/></strong></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <template id="report_sale_book_footer_template" style="font-size:12px;">
+                    <div t-attf-class="footer">
+                        <div class="col-12 text-right" style="font-size:14px;">
+                            Pág <span class="page"/> de <span class="topage"/>
+                        </div>
+                    </div>
+                </template>
+
+            </t>
+        </t>
+
+    </template>
+
+</odoo>

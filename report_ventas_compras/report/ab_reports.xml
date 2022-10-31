@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PDF Reports -->
+
+    <record id="report_purchase_book_ab" model="ir.actions.report">
+        <field name="name">Libro de Compras PDF / Guatemala</field>
+        <field name="model">wizard.ventas.compras</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">report_ventas_compras.report_purchase_book</field>
+        <field name="report_file">report_ventas_compras.report_purchase_book</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <record id="report_purchase_book_ab_format" model="report.paperformat">
+        <field name="name">Formato: Libro de Compras PDF / Guatemala</field>
+        <field name="default" eval="True"/>
+        <field name="format">Legal</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">35</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">32</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(4, ref('report_purchase_book_ab'))]"/>
+    </record>
+
+    <record id="report_sale_book_ab" model="ir.actions.report">
+        <field name="name">Libro de Ventas PDF / Guatemala</field>
+        <field name="model">wizard.ventas.compras</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">report_ventas_compras.report_sale_book</field>
+        <field name="report_file">report_ventas_compras.report_sale_book</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    
+    <record id="report_sale_book_ab_format" model="report.paperformat">
+        <field name="name">Formato: Libro de Ventas PDF / Guatemala</field>
+        <field name="default" eval="True"/>
+        <field name="format">Legal</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">35</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">32</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(4, ref('report_sale_book_ab'))]"/>
+    </record>
+
+    <!-- XLS Reports -->
+
+    <record id="report_purchase_book_ab_xls" model="ir.actions.report">
+        <field name="name">Libro de Compras XLS / Guatemala</field>
+        <field name="model">wizard.ventas.compras</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_ventas_compras.report_purchase_book_xls</field>
+        <field name="report_file">report_ventas_compras.report_purchase_book_xls</field>
+    </record>
+
+    <record id="report_sale_book_ab_xls" model="ir.actions.report">
+        <field name="name">Libro de Ventas XLS / Guatemala</field>
+        <field name="model">wizard.ventas.compras</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_ventas_compras.report_sale_book_xls</field>
+        <field name="report_file">report_ventas_compras.report_sale_book_xls</field>
+    </record>
+
+</odoo>
