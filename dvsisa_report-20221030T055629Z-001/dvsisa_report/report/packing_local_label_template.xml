@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <template id="local_label_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.basic_layout" style="position:static;">
+                        
+                        <t t-as="item" t-foreach="range(doc.boxes)">
+                            <div class="page" style="font-size:16px;">
+                                <div class="row">
+                                    <img class="img-fluid" t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="height:60px; width:120px;" alt="Logo"/>
+                                    <p style="padding-left:20px;"><strong><span t-esc="doc.company_id.street.upper()"/></strong></p>
+                                </div>
+                                
+                                <div style="margin-top:7px;">
+                                    <p class="text-center" style="font-size:18px;"><strong><span t-esc="doc.partner_id.name.upper()"/></strong></p>
+                                    <p class="text-center">
+                                        <t t-if="doc.partner_id.parent_id">
+                                            <span t-esc="doc.partner_id.parent_id.name.upper()"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="doc.partner_id.name.upper()"/>
+                                        </t>
+                                    </p>
+                                    <p class="text-center">
+                                        <strong>
+                                            <span t-esc="doc.partner_id.street"/>
+                                            <t t-if="doc.partner_id.street2">
+                                                , <span t-esc="doc.partner_id.street2"/>
+                                            </t>
+                                            <t t-if="doc.partner_id.city">
+                                                , <span t-esc="doc.partner_id.city"/>, 
+                                            </t>
+                                            <t t-if="doc.partner_id.state_id">
+                                                , <span t-esc="doc.partner_id.state_id.name"/>
+                                            </t>
+                                            <t t-if="doc.partner_id.zip">
+                                                <span t-esc="doc.partner_id.zip"/>
+                                            </t>
+                                            <t t-if="doc.partner_id.municipality_id">
+                                                , <span t-esc="doc.partner_id.municipality_id.name"/>, 
+                                                <span t-esc="doc.partner_id.zone"/>
+                                            </t>
+                                            <t t-if="doc.partner_id.country_id">
+                                                , <span t-esc="doc.partner_id.country_id.name"/>
+                                            </t>
+                                        </strong>
+                                    </p>
+                                </div>
+                                
+                                <div style="margin-top:14px;">
+                                    <div class="float-left" style="margin-top:5px; width:50%;">
+                                        <p style="font-size:18px;"><strong><span t-esc="doc.picking_id.name.upper()"/></strong></p>
+                                        <p style="margin-top:-10px;">Bulto: <span t-esc="item+1"/> / <span t-esc="doc.boxes"/></p>
+                                    </div>
+                                    
+                                    <div class="float-left text-right" style="width:50%;">
+                                        <p style="font-size:18px;"><strong><span t-esc="doc.order_id.name.upper()"/></strong></p>
+                                        <div style="padding-left:0px;" class="text-center">
+                                            <img style="height:45px; margin-top:-10px;" t-att-src="'/report/barcode/Code128/%s' % doc.name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p style="page-break-after:always;"/>
+                            </div>
+                        </t>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+    
+</odoo>

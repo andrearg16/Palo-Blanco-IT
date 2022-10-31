@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <template id="purchase_order_document_custom_report" inherit_id="purchase.report_purchaseorder_document">
+
+            <xpath expr="//div[hasclass('page')]/div[1]" position="replace"> 
+                <div class="oe_structure mt-3"/>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]/div[@id='informations']" position="replace">
+                <div id="informations_one" class="row mt32 mb32 mt-2">
+                    <div t-if="o.user_id" class="col-4 bm-2">
+                        <strong>Solicitado Por:</strong>
+                        <p t-field="o.user_id" class="m-0"/>
+                    </div>
+                    <div t-if="o.user_id.login" class="col-4 bm-2">
+                        <strong>Correo:</strong>
+                        <p t-field="o.user_id.login" class="m-0"/>
+                    </div>
+                    <div t-if="o.user_id.phone" class="col-4 bm-2">
+                        <strong>Teléfono:</strong>
+                        <p t-field="o.user_id.phone" class="m-0"/>
+                    </div>
+                </div>
+                <div id="informations_two" class="row mt32 mb32 mt-1 mb-2">
+                    <div t-if="o.date_order" class="col-4 bm-2">
+                        <strong>Fecha del Pedido:</strong>
+                        <p t-field="o.date_order" class="m-0"/>
+                    </div>
+                    <div t-if="o.company_id.currency_id" class="col-4 bm-2">
+                        <strong>Moneda:</strong>
+                        <p t-field="o.currency_id.name" class="m-0"/>
+                    </div>
+                    <div t-if="o.payment_term_id.name" class="col-4 bm-2">
+                        <strong>Condición de Pago:</strong>
+                        <p t-field="o.payment_term_id.name" class="m-0"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]/table[1]" position="replace">
+                <table class="table table-bordered table-sm o_main_table">
+                    <thead>
+                        <tr style="background-color: #f29d41; color:white;">
+                            <th style="vertical-align: middle;" name="th_description" class="text-center"><strong>Descripción</strong></th>
+                            <th style="vertical-align: middle;" name="th_cc" class="text-center"><strong>C.C</strong></th>
+                            <th style="vertical-align: middle;" name="th_date_req" class="text-center"><strong>Fecha req.</strong></th>
+                            <th style="vertical-align: middle;" name="th_quantity" class="text-center"><strong>Cant</strong></th>
+                            <th style="vertical-align: middle;" name="th_quantity" class="text-center"><strong>U.</strong></th>
+                            <th style="vertical-align: middle;" name="th_price_unit" class="text-center"><strong>Precio Unitario</strong></th>
+                            <th style="vertical-align: middle; width:150px;" name="th_amount" class="text-center"><strong>Monto</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="current_subtotal" t-value="0"/>
+                        <t t-foreach="o.order_line" t-as="line">
+                            <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                            <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+
+                            <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                <t t-if="not line.display_type">
+                                    <td id="product">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td id="category">
+                                        <span t-field="line.product_id.categ_id.name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.date_planned"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.product_qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                    <span t-field="line.product_uom.name" groups="uom.group_uom"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="o.currency_id.symbol"/>.
+                                        <span t-esc="'{0:,.2f}'.format(line.price_unit)"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.price_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                    </td>
+                                </t>
+                                <t t-if="line.display_type == 'line_section'">
+                                    <td colspan="99" id="section">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <t t-set="current_section" t-value="line"/>
+                                    <t t-set="current_subtotal" t-value="0"/>
+                                </t>
+                                <t t-if="line.display_type == 'line_note'">
+                                    <td colspan="99" id="note">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                        
+                        <tr>
+                            <td colspan="5">
+                                <p style="font-size:14px;"><strong>Total en Letras:</strong></p>
+                                <p style="padding-left:10px; margin-top:-12px;"><span t-esc="o.get_num2words(o.amount_total, o.currency_id.name).upper()"/></p>
+                            </td>
+                            <th class="text-center" style="vertical-align: middle; background-color: #f29d41; color:white; font-size:16px;">
+                                <p style="color:white;"><strong>Total</strong></p>
+                            </th>
+                            <td class="text-center" style="vertical-align: middle; font-size:16px;">
+                                <p>
+                                    <strong>
+                                        <span t-field="o.currency_id.symbol"/>.
+                                        <span t-esc="'{0:,.2f}'.format(o.amount_total)"/>
+                                    </strong>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]/div[@id='total']" position="replace">
+                <div class="row mt-4 mb-3">
+                    <div class="col-12">
+                        <p><strong>Autorizado Por:</strong></p>
+                        <p class="text-center"><span t-field="o.user_id"/> <span t-field="o.date_approve"/></p>
+                    </div>
+                </div>
+                
+                <t t-if="o.notes">
+                    <div class="row">
+                        <div class="col-12">
+                        <p><strong>Notas:</strong></p>
+                        <p style="padding-left:10px; margin-top:-15px;" t-field="o.notes"/>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]/p[1]" position="replace" />
+
+        </template>
+
+    </data>
+    
+</odoo>
