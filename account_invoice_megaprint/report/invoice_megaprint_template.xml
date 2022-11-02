@@ -36,7 +36,7 @@
                                         <img class="img-fluid" t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="height:90px; width:240px;" alt="Logo"/>
                                     </div>
                                     <div class="col-5 text-center" style="padding-top:15px;">
-                                        <p style="font-size: 14px; font-weight:bold;"><span t-esc="o.company_id.nombre_comercial.upper()"/> - <span t-esc="o.company_id.name.upper()"/></p>
+                                        <p style="font-size: 14px; font-weight:bold;"><span t-esc="o.company_id.nombre_comercial.upper()"/> <br/> <span t-esc="o.company_id.name.upper()"/></p>
                                         <t t-if="o.company_id.street or o.company_id.street2">
                                             <p style="font-size: 11px; margin-top:-15px; font-weight:bold;">
                                                 <t t-if="o.company_id.street">
@@ -146,7 +146,19 @@
                                                 <tr>
                                                     <td style="padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
                                                         <p style="font-size:10px; font-weight:bold;">FECHA FACTURA:</p> 
-                                                        <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;" t-esc="o.invoice_date"/>
+                                                        
+                                                            <t t-if="o.fel_date">
+                                                                  <t t-set="dividido" t-value="o.fel_date.split('T')"/> 
+                                                                  <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;">
+                                                                    <t t-esc="dividido[0]"/>
+                                                                  </p> 
+                                                            </t>
+                                                            <t t-else="">
+                                                                <p style="font-size:11px; margin-top:-15px; padding-top:-5px; padding-bottom:0px;">
+                                                                    <t t-esc="o.invoice_date"/>
+                                                                  </p> 
+                                                            </t>
+                                                       
                                                     </td>
                                                     <td style="padding-bottom:2px; border-right:2px solid black; margin:2px; padding-top:0px; padding-bottom:0px;">
                                                         <p style="font-size:10px; font-weight:bold;">CLIENTE:</p>
@@ -259,6 +271,7 @@
                                             <t t-set="used_product" t-value="o.get_used_product(lines)"/>
                                             <t t-set="lineas_totales" t-value="0"/>
                                             <t t-set="total_fe" t-value="0"/>
+                                            <t t-set="contar" t-value="0"/>
                                             <t t-foreach="used_product" t-as="line">
                                                 <t t-set="lineas_totales" t-value="lineas_totales + 1"/>
                                                 <tr>
@@ -289,50 +302,39 @@
                                                   <td class="text-right">1</td>
                                               </tr>
                                             </t>
+                                           
                                         </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <table width="100%" style="font-size:11px; border-collapse:separate;">
-                                    <tr>
-                                        <th width="15.2%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-left: 2px solid black; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
-                                        <th width="15%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
-                                        <th width="39.8%" class="text-center" style="vertical-align: middle; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">
-                                            <t t-foreach="o.frase_ids" t-as="frase">
-                                                <span t-esc="frase.name"/>
-                                            </t>
-                                        </th>
-                                        <th width="15.1%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
-                                        <th width="15.1%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
-                                    </tr>
-                                </table>
-                            </div>
-                            
-                            <div class="row">
-                                <div style="width:100%;">
-                                    <table class="table table-borderless" style="border: 2px solid black;">
-                                        <tr>
-                                            <td width="85%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; border-bottom: 2px solid black;" colspan="3"><strong>TOTAL EN LETRAS:</strong> <span t-esc="o.get_num2words(o.amount_total, o.currency_id.name).upper()"/></td>
-                                            <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4;" class="text-center"/>
-                                        </tr>
-                                        <tr>
-                                            <td width="40%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;"><strong>Autorización:</strong> <span t-esc="o.uuid"/></td>
-                                            <td width="45%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; border-bottom: 2px solid black;" colspan="2"><strong>Fecha de Certificación:</strong> <span t-esc="o.fel_date"/></td>
-                                            <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;" class="text-center"/>
-                                        </tr>
-                                        <tr>
-                                            <td width="70%" class="text-justify" style="font-size:12px; vertical-align: middle; font-size:9px; margin:5px; padding:5px; border-right: 2px solid black;" colspan="2">
-                                              <t t-if="o.move_type != 'out_refund'"> 
-                                                En las condiciones de pago que se indican en esta Factura Cambiaria se sirva(n) usted(es) pagar ésta única, girada
-                                                libre de protesto a la orden o endoso de Díaz Vélez Soluciones Integrales, S.A. el valor total por el que está
-                                                extendida. Valor recibido que asentará(n) usted(es) en cuenta,según nuestro aviso.
-                                              </t>  
-                                            </td>
-                                            <th width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; background-color: #07375F; color: white;" class="text-center">Total</th>
-                                            <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4;" class="text-right"><strong><span class="float-left" t-esc="o.currency_id.symbol"/> <span t-esc="'{0:,.2f}'.format(o.amount_total)"/></strong></td>
-                                        </tr>
+                                         <tfoot>
+                                                  <tr width="100%" style="font-size:11px; border-collapse:separate;">
+                                                    <th width="15.2%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                                    <th width="15%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                                    <th width="39.8%" class="text-center" style="vertical-align: middle; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px">
+                                                        <t t-foreach="o.frase_ids" t-as="frase">
+                                                            <span t-esc="frase.name"/>
+                                                        </t>
+                                                    </th>
+                                                    <th width="15.1%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-right: 2px solid black; border-bottom: 2px solid black; font-size: 12px"/>
+                                                    <th width="15.1%" class="text-center" style="vertical-align: middle; color: white; margin: 7px; padding:7px; border-bottom: 2px solid black; font-size: 12px"/>
+                                                </tr>
+                                                <tr width="100%" style="border: 2px solid black;">
+                                                  <td width="100%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;" colspan="5"><strong>TOTAL EN LETRAS:</strong> <span t-esc="o.get_num2words(o.amount_total, o.currency_id.name).upper()"/></td>
+                                                </tr>
+                                                <tr width="100%" style="border: 2px solid black;"> 
+                                                  <td style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;" colspan="2"><strong>Autorización:</strong> <span t-esc="o.uuid"/></td>
+                                                  <td width="45%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;" colspan="3"><strong>Fecha de Certificación:</strong> <span t-esc="o.fel_date"/></td>
+                                                </tr>
+                                                <tr width="100%" style="border: 2px solid black;">
+                                                  <td width="70%" class="text-justify" style="font-size:12px; vertical-align: middle; font-size:9px; margin:5px; padding:5px;border-bottom: 2px solid black; border-right: 2px solid black;" colspan="3">
+                                                    <t t-if="o.move_type != 'out_refund'"> 
+                                                    En las condiciones de pago que se indican en esta Factura Cambiaria se sirva(n) usted(es) pagar ésta única, girada
+                                                    libre de protesto a la orden o endoso de Díaz Vélez Soluciones Integrales, S.A. el valor total por el que está
+                                                    extendida. Valor recibido que asentará(n) usted(es) en cuenta,según nuestro aviso.
+                                                    </t>  
+                                                  </td>
+                                                    <th width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-right: 2px solid black; background-color: #07375F;border-bottom: 2px solid black; color: white;" colspan="1" class="text-center">Total</th>
+                                                    <td width="15%" style="font-size:12px; vertical-align: middle; margin:5px; padding:5px; background-color:#F4F4F4; border-bottom: 2px solid black;" colspan="1" class="text-right"><strong><span class="float-left" t-esc="o.currency_id.symbol"/> <span t-esc="'{0:,.2f}'.format(o.amount_total)"/></strong></td>
+                                                </tr>
+                                            </tfoot>
                                     </table>
                                 </div>
                             </div>
