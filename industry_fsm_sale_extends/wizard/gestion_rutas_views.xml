@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="wizard_gestion_rutas" model="ir.ui.view">
+        <field name="name">Asistente.para.asignacion.de.rutas</field>
+        <field name="model">wizard.gestion.rutas</field>
+        <field name="arch" type="xml">
+        <form string="Asistente de programacion de rutas">
+            <group col="2">
+                <group>
+                    <field name="date_start"/>
+                </group>
+                <group>
+                    <field name="date_end"/>
+                </group>
+            </group>
+            <group>
+              <field name="user_id" options="{'no_create': True}"/>
+            </group>
+            <group>
+              <field name="rutas_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('user_id','=',user_id)]"/>
+          </group>
+            <footer>
+                <button name="action_rutas" string="  Programar rutas" type="object" class="btn btn-primary fa fa-road"/>
+                <button string="Cancel" class="btn btn-secondary" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="wizard_gestion_rutas_manual" model="ir.ui.view">
+        <field name="name">Asistente.para.asignacion.de.ruta.manual</field>
+        <field name="model">asistente.asignacion.manual</field>
+        <field name="arch" type="xml">
+        <form string="Asistente de programacion de rutas manual">
+            <group col="2">
+            </group>
+            <group>
+              <field name="partner_ids" widget="many2many_tags" options="{'no_create': True}"/>
+            </group>
+            <footer>
+                <button name="action_asignacion_manual" string="  Agregar cliente fuera de ruta" type="object" class="btn btn-primary fa fa-road"/>
+                <button string="Cancel" class="btn btn-secondary" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="wizard_estado_visitado" model="ir.ui.view">
+        <field name="name">Asistente.para.estado.vistado</field>
+        <field name="model">wizard.faild.done</field>
+        <field name="arch" type="xml">
+        <form string="Estado e informe de visita">
+            <group col="2">
+            </group>
+            <group>
+              <field name="state_visit"/>
+              <field name="lost_reason_id" attrs="{'invisible': [('state_visit', 'in', ['done'])]}"/>
+              <field name="text" string="Comentarios" attrs="{'invisible': [('state_visit', 'in', ['done'])]}"/>
+            </group>
+            <footer>
+                <button name="validate_visit" string="Confirmar" type="object" class="oe_highlight"/>
+                <button string="Cancelar" class="btn btn-secondary" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_gestion_rutas_manual" model="ir.actions.act_window">
+        <field name="name">Asistente fuera de ruta</field>
+        <field name="res_model">asistente.asignacion.manual</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_gestion_rutas_manual"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_wizard_gestion_rutas" model="ir.actions.act_window">
+        <field name="name">Asistente programacion de rutas</field>
+        <field name="res_model">wizard.gestion.rutas</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_gestion_rutas"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_wizard_status_visited" model="ir.actions.act_window">
+        <field name="name">Estado visitado</field>
+        <field name="res_model">wizard.faild.done</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_estado_visitado"/>
+        <field name="target">new</field>
+    </record>
+
+
+</data>
+</odoo>

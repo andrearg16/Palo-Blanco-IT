@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="paperformat_ticket_project_task_payment" model="report.paperformat">
+        <field name="name">Ticket Receipt</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">195</field>
+        <field name="page_width">80</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="dpi">110</field>
+    </record>
+
+    <template id="custom_ticket_layout_project">
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <div class="header">
+
+            <div class="row">
+                <div class="col text-center" style="text-align:center;">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 35px;"
+                         alt="Logo"/>
+                    <div t-if="company.name" class="text-center">
+                        <span t-field="company.name"/>
+                        <t t-if="company.country_id">(<span t-esc="company.country_id.name"/>)
+                        </t>
+                    </div>
+                    <div t-if="company.street" class="text-center">
+                        <span class="o_force_ltr" t-field="company.street"/>
+                        <t t-if="company.street2">,
+                            <span class="o_force_ltr" t-field="company.street2"/>
+                        </t>
+                    </div>
+                    <div t-if="company.vat" class="text-center">Nit:
+                        <span class="o_force_ltr" t-field="company.vat"/>
+                    </div>
+                    <div t-if="company.phone" class="text-center">Tel:
+                        <span class="o_force_ltr" t-field="company.phone"/>
+                    </div>
+                    <div t-if="company.email" style="text-align:center;">
+                        <span t-field="company.email"/>
+                    </div>
+                    <div t-if="company.website">
+                        <span t-field="company.website"/>
+                    </div>
+                    <div>--------------------------------------</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Comprobante de Pago</b>
+                </div>
+            </div>
+        </div>
+        <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-out="0"/>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="ticket_payment_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="payment">
+            <t t-foreach="payment.payment_ids" t-as="o">
+            <t t-if="payment.payment_ids">
+                <t t-call="industry_fsm_sale_extends.custom_ticket_layout_project">
+                    <div class="row">
+                        <table class="table table-sm" style="width:100%; margin-top:45px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width:45%;border-color: white;">
+                                        <b>Cliente:</b>
+                                    </td>
+                                    <td style="text-align: right;word-break: break-all;border-color: white;">
+                                        <span style="word-break: break-all;" t-field="o.partner_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="o.partner_id.vat">
+                                    <td style="border-color: white;">
+                                        <b>NIT:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.partner_id.vat"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="o.partner_id.ref">
+                                    <td style="border-color: white;">
+                                        <b>Código:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.partner_id.ref"/>
+                                    </td>
+                                </tr>
+                                <tr tif="o.partner_id.credit">
+                                    <td style="border-color: white;">
+                                        <b>Deuda Total:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.partner_id.credit"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Fecha de Pago:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Tipo Pago:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.payment_type"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Forma de Pago :</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.journal_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Valor Cancelado:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.amount"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Tipo de Modena:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.currency_id"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Referencia Transacción:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <span t-field="o.ref"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-color: white;">
+                                        <b>Facturas cobradas:</b>
+                                    </td>
+                                    <td style="text-align: right;border-color: white;">
+                                        <t t-foreach="o.reconciled_invoice_ids" t-as="invoice">
+                                            <span style="float: right;" t-esc="invoice.name"/>
+                                            <br/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="row">
+                        <div class="col">
+                            <b>Observaciones:</b>
+                            <p style="font-size: 15px; text-align:justify">Si los pagos son efectuados con cheques que
+                                el banco no haga efectivos, este recibo queda anulado. Se cobrará Q150,00 por cheque
+                                rechazado
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <br/>
+                    <br/>
+                    <div style="text-align:center">
+                        <td>
+                            <b>Recibo de caja N°:</b>
+                        </td>
+                        <span>
+                            <t t-esc="o.name"></t>
+                        </span>
+                    </div>
+                    <div style="text-align:center">
+                        <span>--------------------------------------</span>
+                    </div>
+                    <div style="text-align:center">
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                    </div>
+                </t>
+                </t>
+            </t>
+        </t>
+    </t>            
+    </template>
+
+    <record id="industry_fsm_sale_extends.action_custom_receipt_payment_report_project_task" model="ir.actions.report">
+        <field name="name">Ticket recibo de pago</field>
+        <field name="model">project.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_project_task"/>
+        <field name="paperformat_id" ref="industry_fsm_sale_extends.paperformat_ticket_project_task_payment"/>
+        <field name="report_name">industry_fsm_sale_extends.ticket_payment_receipt</field>
+        <field name="print_report_name">('Ticket - %s' % (object.name))</field>
+        <field name="report_file">industry_fsm_sale_extends.ticket_payment_receipt</field>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

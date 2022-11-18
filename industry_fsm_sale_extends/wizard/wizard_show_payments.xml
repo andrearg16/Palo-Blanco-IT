@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+            <record id ="show_payments_wizard" model="ir.ui.view">
+                <field name="name">show.payment.wizard</field>
+                <field name="model">wizard.show.payments</field>
+                <field name="arch" type="xml">
+                   <form string="LISTA DE PAGOS">
+                      	<group>
+                    		<separator colspan="4" string="Pago"/>
+                    			<field name="payment_id" widget="one2many" nolabel="1"/>
+				        </group>
+                        <footer>
+                            <button name="print_report" string="Generar PDF" type="object" class="btn-primary"/>
+                            <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </form>
+                </field>
+            </record>
+
+        <record id="action_show_payments_wizard" model="ir.actions.act_window">
+            <field name="name">LISTA DE PAGOS</field>
+            <field name="res_model">wizard.show.payments</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="show_payments_wizard"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

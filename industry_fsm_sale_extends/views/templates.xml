@@ -1,0 +1,101 @@
+<odoo>
+    <data>
+
+    <!--        
+    <menuitem id="industry_fsm.fsm_tasks_menu"
+        name="My Tasks"
+        sequence="10"
+        groups="industry_fsm.group_fsm_user"/>
+
+        <menuitem id="industry_fsm.fsm_menu_tasks_kanban"
+            name="Tasks"
+            action="industry_fsm.project_task_action_fsm"
+            sequence="10"
+            groups="industry_fsm.group_fsm_user"/>
+
+        <menuitem id="industry_fsm.fsm_menu_tasks_map"
+            name="Map"
+            action="industry_fsm.project_task_action_fsm_map"
+            sequence="20"
+            groups="industry_fsm.group_fsm_user"/>
+
+    <menuitem id="industry_fsm.fsm_menu_all_tasks_root"
+        name="All Tasks"
+        sequence="15"
+        groups="industry_fsm.group_fsm_manager" />
+
+        <menuitem id="industry_fsm.fsm_menu_all_tasks_todo"
+            name="All Tasks"
+            action="industry_fsm.project_task_action_all_fsm"
+            sequence="10"
+            groups="industry_fsm.group_fsm_manager" />
+
+        <menuitem id="industry_fsm.fsm_menu_all_tasks_schedule"
+            name="To Schedule"
+            action="industry_fsm.project_task_action_to_schedule_fsm"
+            sequence="20"
+            groups="industry_fsm.group_fsm_manager" />
+
+    <menuitem id="industry_fsm.fsm_menu_planning"
+        name="Planning"
+        sequence="20"
+        groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="industry_fsm.project_task_menu_planning_by_user_fsm"
+            name="By User"
+            sequence="10"
+            action="industry_fsm.project_task_action_fsm_planning_groupby_user"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="industry_fsm.project_task_menu_planning_by_project_fsm"
+            name="By Project"
+            sequence="15"
+            action="industry_fsm.project_task_action_fsm_planning_groupby_project"
+            groups="industry_fsm.group_fsm_manager"/>
+
+    <menuitem id="industry_fsm.fsm_menu_reporting"
+        name="Reporting"
+        sequence="40"
+        groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="industry_fsm.fsm_menu_reporting_task_analysis"
+            name="Tasks Analysis"
+            sequence="10"
+            action="industry_fsm.project_task_user_action_report_fsm"
+            groups="industry_fsm.group_fsm_manager"/>
+
+    <menuitem id="industry_fsm.fsm_menu_settings"
+        name="Configuration"
+        sequence="50"
+        parent="industry_fsm.fsm_menu_root"
+        groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="industry_fsm.fsm_menu_settings_res_config"
+            name="Settings"
+            sequence="0"
+            action="industry_fsm.res_config_settings_action_fsm"
+            groups="base.group_system"/>
+
+        <menuitem id="industry_fsm.fsm_menu_settings_project"
+            name="Projects"
+            sequence="10"
+            action="industry_fsm.project_project_action_only_fsm"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="industry_fsm.menu_project_tags_act"
+            name="Tags"
+            sequence="40"
+            action="project.project_tags_action"
+            groups="industry_fsm.group_fsm_manager"/>
+
+        <menuitem id="industry_fsm.fsm_menu_settings_stage"
+            name="Stages"
+            sequence="10"
+            action="industry_fsm.project_task_type_action_fsm"
+            groups="industry_fsm.group_fsm_manager"/>
+          
+  
+
+    -->   
+    </data>
+</odoo>

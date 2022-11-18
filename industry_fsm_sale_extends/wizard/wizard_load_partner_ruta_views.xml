@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="wizard_carga_masiva_clientes" model="ir.ui.view">
+        <field name="name">Carga masiva de clientes</field>
+        <field name="model">wizard.cargar.rutas</field>
+        <field name="arch" type="xml">
+        <form string="Excepciones">
+        <group>
+            <group>
+              <field name="partners_file" filename="partners_name"/>
+              <field name="partners_name" invisible="1"/>
+            </group>
+            <hr/>
+          </group>
+            <footer>
+                <button name="load_partner" string="  Carga Masiva" type="object" class="btn btn-primary fa fa-upload"/>
+                <button string="Cancel" class="btn btn-secondary" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_carga_masiva_clientes" model="ir.actions.act_window">
+        <field name="name">Carga masiva clientes</field>
+        <field name="res_model">wizard.cargar.rutas</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_carga_masiva_clientes"/>
+        <field name="binding_model_id" ref="industry_fsm_sale_extends.model_rutas"/>
+        <field name="binding_view_types">form</field>
+        <field name="target">new</field>
+    </record>
+</data>
+</odoo>

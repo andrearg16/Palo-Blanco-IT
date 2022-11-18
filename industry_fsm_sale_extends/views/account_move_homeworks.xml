@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="account_move_homeworks_extends" model="ir.ui.view">
+            <field name="name">account.move.homeworks.extends</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                <xpath expr="//field[@name='activity_ids']" position="replace">
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_untaxed_signed']" position="replace">
+                    <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="hide"/>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="hide"/>                
+                </xpath>
+                <xpath expr="//field[@name='amount_residual_signed']" position="replace">
+                    <field name="amount_residual_signed" string="Adeudado Real"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_residual_signed']" position="after">
+                    <field name="pending_apply"/>
+                    <field name="expected_due"/>
+                </xpath>
+                </data>
+            </field>
+        </record>
+    </data>    
+</odoo>

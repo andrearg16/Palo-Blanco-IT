@@ -1,0 +1,261 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="rutas_list">
+      <field name="name">Catalogo de rutas</field>
+      <field name="model">rutas</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="company_id"/>
+          <field name="state_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="catalogo_rutas">
+      <field name="name">Rutas</field>
+      <field name="res_model">rutas</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="planificador_rutas">
+      <field name="name">Planificador de rutas</field>
+      <field name="model">planificador.rutas</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="company_id"/>
+          <field name="state_id"/>
+          <field name="user_id"/>
+          <field name="stage"/>
+        </tree>
+      </field>
+    </record>
+
+
+    <record id="view_rutas_form" model="ir.ui.view">
+      <field name="name">Ruta</field>
+      <field name="model">rutas</field>
+      <field name="arch" type="xml">
+        <form string="Ruta">
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name"/>
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="company_id"/>
+              <field name="state_id"/>
+            </group>
+            <group>
+              <field name="user_id"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Clientes" name="clientes">
+              <field name="partner_ids">
+                <tree string="Visitas planificadas" editable="botom" delete="1" default_order="orden">
+                  <field name="partner_id"/>
+                  <field name="orden"/>
+                </tree>
+              </field>
+            </page>
+        </notebook>
+        </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_planificador_form" model="ir.ui.view">
+      <field name="name">Planificador de rutas</field>
+      <field name="model">planificador.rutas</field>
+      <field name="arch" type="xml">
+        <form string="Ruta Planificada">
+          <header>
+            <field name="stage" widget="statusbar"/>
+            <button name="button_in_progress" class="oe_highlight" string="En proceso" type="object" attrs="{'invisible': [('stage', 'in', ['in_process','completed'])]}"/>
+            <button name="button_completed" class="oe_highlight" string="Completada" type="object" attrs="{'invisible': [('stage', 'in', ['completed','pending'])]}"/>
+          </header>
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="name"/>
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="company_id"/>
+              <field name="state_id"/>
+            </group>
+            <group>
+              <field name="user_id"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Visitas" name="visitas">
+              <field name="project_line">
+                <tree string="Visitas planificadas" editable="botom" delete="1">
+                  <field name="name"/>
+                  <field name="date_assign"/>
+                </tree>
+              </field>
+            </page>
+        </notebook>
+        </sheet>
+          <div class="oe_chatter">
+          <field name="message_follower_ids" groups="base.group_user"/>
+          <field name="activity_ids"/>
+          <field name="message_ids"/>
+        </div>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="rutas_programadas">
+      <field name="name">Rutas programadas</field>
+      <field name="res_model">planificador.rutas</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="rutas.action_server">
+      <field name="name">rutas server</field>
+      <field name="model_id" ref="model_rutas_rutas"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <!-- menu categories -->
+
+    <!-- actions -->
+    <menuitem name="Rutas" id="menu_catalogo_rutas" parent="industry_fsm.fsm_menu_settings"
+              action="catalogo_rutas"/>
+    
+    
+    <menuitem id="planificacion_rutas"
+        name="Programacion de Rutas"
+        sequence="1"
+        parent="industry_fsm.fsm_menu_root"
+        groups="industry_fsm.group_fsm_manager"/>
+    
+    <menuitem name="Rutas programadas" 
+              id="menu_rutas_programadas" 
+              parent="planificacion_rutas"
+              action="rutas_programadas" 
+              groups="industry_fsm.group_fsm_manager" 
+              sequence="1"/>
+
+    <menuitem name="Asignar rutas" 
+              id="menu_programar_rutas" 
+              parent="planificacion_rutas"
+              action="action_wizard_gestion_rutas" 
+              groups="industry_fsm.group_fsm_manager" 
+              sequence="2"/>
+    
+    <menuitem id="industry_fsm.fsm_menu_all_tasks_todo"
+            name="All Tasks"
+            action="industry_fsm.project_task_action_all_fsm"
+            sequence="10"
+            parent="planificacion_rutas"
+            groups="industry_fsm.group_fsm_manager" />
+    
+    <menuitem id="industry_fsm.fsm_tasks_menu"
+        name="Visitas"
+        sequence="10"
+        parent="industry_fsm.fsm_menu_root"
+        groups="industry_fsm.group_fsm_user"/>
+
+    <menuitem id="industry_fsm.fsm_menu_tasks_kanban"
+        name="Mis Visitas"
+        action="industry_fsm.project_task_action_fsm"
+        sequence="10"
+        parent="industry_fsm.fsm_tasks_menu"
+        groups="industry_fsm.group_fsm_user"/>
+    
+    <record id="project_task_guias" model="ir.ui.view">
+            <field name="name">project.task.guia</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <data>
+                  <xpath expr="//button[@name='action_open_parent_task']" position="after">
+                    <button name="action_open_task_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                      <div class="o_field_widget o_stat_info">
+                          <span class="o_stat_text">
+                              <field name="invoice_count"/>
+                              Facturas
+                          </span>
+                      </div>
+                  </button>
+                  </xpath>
+                  <xpath expr="//form//field[@name='partner_phone']" position="after">
+                    <field name="tarifas" />
+                  </xpath>
+                  <xpath expr="//form[1]/header[1]/button[@name='action_send_report'][2]" position="after">
+                    <button name="ruta_manual" string="Asignacion de ruta manual" id="ruta_manual" type="object" class="oe_highlight" />
+                  </xpath>
+                  <xpath expr="//form[1]/header[1]/button[@name='action_fsm_validate'][2]" position="replace">
+                      <button name="action_validate" string="Marcar como hecho" 
+                      id="action_fsm_validate" 
+                      type="object" 
+                      class="oe_highlight" 
+                      attrs="{'invisible': ['|',('kanban_state', '!=', 'normal'),('is_closed', '=', True)]}" /> 
+                  </xpath>
+                   <xpath expr="//button[@name='action_view_invoices']" position="replace">
+                      <button name="action_view_invoices" invisible="1"/>    
+                  </xpath>
+                  <xpath expr="//button[@name='action_fsm_worksheet']" position="replace">
+                      <button name="action_fsm_worksheet" invisible="1"/>    
+                  </xpath>
+                  <xpath expr="//button[@name='action_create_invoice']" position="replace">
+                    <button name="action_create_invoice" invisible="1"/>
+                  </xpath>
+                </data>
+
+                  <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/label[1]" position="replace">
+                  <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='user_ids']" position="move"/>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/div[1]/field[@name='project_id']" position="attributes">
+                  <attribute name="attrs">{}</attribute>
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='project_id']" position="attributes">
+                  <attribute name="attrs">{}</attribute>
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='worksheet_template_id']" position="attributes">
+                  <attribute name="attrs">{}</attribute>
+                  <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='user_ids']" position="attributes">
+                  <attribute name="string">Vendedor</attribute>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='user_ids']" position="after">
+                  <field name="visit_exit" attrs="{'invisible': [('visit_exit', '=', False)]}" />
+                  <field name="planificador_id"/>
+                  <field name="fuera_ruta" readonly="1"/>
+                  <field name="lost_reason" attrs="{'invisible': [('lost_reason', '=', False)]}" />
+                  <field name="visit_failure_reason" string="Comentarios" attrs="{'invisible': [('lost_reason', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+  </data>
+</odoo>
