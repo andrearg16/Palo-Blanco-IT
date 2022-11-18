@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+     <record id="view_res_partner_inherit" model="ir.ui.view">
+        <field name="name">res.partner.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">NIT</attribute>
+            </xpath>
+        </field>
+    </record>
+
+        <template id="purchase_order_custom_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.basic_layout" style="position:static;">
+                      <t t-if="doc.partner_id.lang == 'en_US'">
+                        <div class="page container-fluid" style="font-size:10pt; color: #011B50;">
+                            <style>
+                                td.borderx {
+                                    border: 1px solid #011B50;
+                                    padding: 2px;
+                                    margin: 2px;
+                                    vertical-align: middle;
+                                    color: #011B50;
+                                }
+                                td.table1 {
+                                    padding: 2px;
+                                    margin: 2px;
+                                    color: #011B50;
+                                    width:100px;
+                                }
+                                td.table2 {
+                                    padding: 2px;
+                                    margin: 2px;
+                                    color: #011B50;
+                                }
+                            </style>
+                            
+                            <template id="purchase_order_custom_template_header">
+                                <div class="header" style="font-size:10pt; color: #011B50;">
+                                  <div class="col-4 float-left">
+                                    <img src="/web/binary/company_logo" style="width:150px;"/>
+                                    <!--<img t-if="doc.company_id.logo" t-att-src="'data:image/png;base64,%s' %doc.company_id.logo"/>-->
+                                  </div>
+                                  <div class="col-4 float-left" style="margin-top:1px;">
+                                      <h2 style="margin-top:25px;"><strong>ORDER FORM</strong></h2>
+                                  </div>
+                                  <div class="col-4 float-left" style="margin-top:30px;">
+                                    <div class="col-12 mb-2" style="color:white;">
+                                      Jueves equisde dede
+                                    </div>
+                                    <div class="col-5 float-left">
+                                      <table class="table table-borderless">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; background-color: yellow; border-bottom: 1px solid #011B50;">
+                                                  <span t-esc="doc.title_code"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; border-bottom: 1px solid #011B50;">
+                                                  <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%y')"/> 
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                      </table>
+                                    </div>
+                                 <!--   
+                                    <div class="col-7 float-left" style="margin-top:10px;">
+                                      <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d %H:%S')"/> 
+                                    </div>
+                                 -->
+                                  </div>
+                                  <!--<div class="col-4 float-left">-->
+                                  <!--  <div class="col-8 text-center" style="margin: 0 auto;">-->
+                                  <!--      <table class="table table-borderless">-->
+                                  <!--        <thead>-->
+                                  <!--            <tr>-->
+                                  <!--                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; background-color: yellow; border-bottom: 1px solid #011B50;">SELLER:</td>-->
+                                  <!--            </tr>-->
+                                  <!--            <tr>-->
+                                  <!--                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; border-bottom: 1px solid #011B50;">SELLER:</td>-->
+                                  <!--            </tr>-->
+                                  <!--        </thead>-->
+                                  <!--      </table>-->
+                                  <!--  </div>-->
+                                  <!--  <div class="col-12 text-center">-->
+                                  <!--      <p>Jueves equisde dede</p>-->
+                                  <!--  </div>-->
+                                  <!--</div>-->
+                                </div>
+                            </template>
+                            
+                            <div class="row">
+                              <div class="col-12">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="table1">SUPPLIER:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.name"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">ADD:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.street"/> <span t-esc="doc.partner_id.street2"/> <span t-esc="doc.partner_id.city"/> <span t-esc="doc.partner_id.state_id.name"/> <span t-esc="doc.partner_id.zip"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">PROVIDER CODE:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.ref"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">NIT:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.vat"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">PHONE:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.phone"/></td>
+                                      </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                              <div class="col-12">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="table1">BUYER:</td>
+                                          <td class="table2"><span t-esc="doc.company_id.name"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">ADD:</td>
+                                          <td class="table2"><span t-esc="doc.picking_type_id.default_location_dest_id.location_id.name"/>/<span t-esc="doc.picking_type_id.default_location_dest_id.name"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">PHONE:</td>
+                                          <td class="table2"><span t-esc="doc.company_id.phone"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">EMAIL:</td>
+                                          <td class="table2"><span t-esc="doc.create_uid.login"/></td>
+                                      </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                              <div class="col-12">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="borderx text-center"><strong>Code</strong></td>
+                                          <td class="borderx text-center"><strong>Description</strong></td>
+                                          <td class="borderx text-center"><strong>Ctn</strong></td>
+                                          <td class="borderx text-center"><strong>Ctn Rate</strong></td>
+                                          <td class="borderx text-center"><strong>Quantity</strong></td>
+                                          <td class="borderx text-center"><strong>Unit</strong></td>
+                                          <td class="borderx text-center"><strong>CBM</strong></td>
+                                          <td class="borderx text-center"><strong>PB KGS</strong></td>
+                                          <td class="borderx text-center"><strong>Unit Price</strong></td>
+                                          <td class="borderx text-center"><strong>Total Amount</strong></td>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <t t-set="total_ctn" t-value="0"/>
+                                      <t t-set="total_rate_ctn" t-value="0"/>
+                                      <t t-set="total_product_qty" t-value="0"/>
+                                      <t t-set="total_cbm" t-value="0"/>
+                                      <t t-set="total_pb_kgs" t-value="0"/>
+                                      <t t-foreach="doc.order_line" t-as="o">
+                                          <tr>
+                                              <t t-set="total_ctn" t-value="total_ctn + o.ctn"/>
+                                              <t t-set="total_rate_ctn" t-value="total_rate_ctn + o.rate_ctn"/>
+                                              <t t-set="total_product_qty" t-value="total_product_qty + o.product_qty"/>
+                                              <t t-set="total_cbm" t-value="total_cbm + o.cbm"/>
+                                              <t t-set="total_pb_kgs" t-value="total_pb_kgs + o.pb_kgs"/>
+                                              <td class="borderx text-center" stlyle="width: 10%;">
+                                                <!--<t t-foreach="o.product_id.seller_ids" t-as="jojo">
+                                                  <t t-if="doc.partner_id == jojo.name">
+                                                    <span t-esc="jojo.product_code"/>
+                                                  </t>
+                                                </t>-->
+                                                <span t-field="o.product_id.seller_ids.filtered(lambda x: x.name.id == doc.partner_id.id).product_code"/>
+                                              </td>
+                                              <td class="borderx"  stlyle="width: 20%;"><span t-esc="o.name"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><span t-esc="int(o.ctn)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.rate_ctn)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.product_qty)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><span t-esc="o.product_uom.name"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.cbm)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.pb_kgs)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 10%;"><span t-esc="doc.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(o.price_unit)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 10%;"><span t-esc="doc.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(o.price_total)"/></td>
+                                          </tr>
+                                      </t>
+                                      <tr>
+                                          <!-- <td class="borderx text-center" colspan="2"/> -->
+                                          <td class="borderx text-center" colspan="2"><strong>TOTAL</strong></td>
+                                          <td class="borderx text-center"><span t-esc="int(total_ctn)"/></td>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_rate_ctn)"/></td>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_product_qty)"/></td>
+                                          <td class="borderx text-center"/>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_cbm)"/></td>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_pb_kgs)"/></td>
+                                          <td class="borderx text-center"/>
+                                          <td class="borderx text-center"><span t-esc="doc.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(doc.amount_total)"/></td>
+                                      </tr>
+                                      <tr>
+                                        <td class="borderx text-right" colspan="10">
+                                          <strong>Total:</strong> <span t-esc="doc.get_num2words(doc.amount_total)"/>
+                                        </td>
+                                      </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+
+                            <div class="row" style="margin-top:100px;">
+                              <div class="col-12">
+                                <p t-field="doc.comments"/>
+                              </div>
+                            </div>
+                            <div class="row" style="margin-top:100px">
+                              <div class="col-6">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="table1">Made by:</td>
+                                          <td class="table2"><span style="color:white; border-bottom: 1px solid #011B50;">zzzzzzzzzzzzzzzzzzzzz</span></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1"></td>
+                                          <td class="table2"><span t-esc="doc.create_uid.name"/></td>
+                                      </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                              <div class="col-6">
+                                <t t-if="doc.state in ['done','purchase']">
+                                    <table class="table table-borderless">
+                                      <thead>
+                                          <tr>
+                                              <td class="table1">Authorized by:</td>
+                                              <td class="table2"><span style="color:white; border-bottom: 1px solid #011B50;">zzzzzzzzzzzzzzzzzzzzz</span></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="table1"></td>
+                                              <td class="table2"><span t-esc="doc.approved_by_id.name"/></td>
+                                          </tr>
+                                      </thead>
+                                    </table>
+                                </t>
+                              </div>
+                            </div>
+                            
+                            <template id="invoice_fel_footer_invoice_template">
+                                <div t-attf-class="footer" style="font-size:10pt; color: #011B50;">
+                                  <div class="row">
+                                    <div class="col-12 text-center">
+                                      <span class="page"/> of <span class="topage"/>
+                                    </div>
+                                  </div>
+                                </div>
+                            </template>
+      
+                        </div>
+                      </t>
+                      <t t-else="">
+                        <div class="page container-fluid" style="font-size:10pt; color: #011B50;">
+                            <style>
+                                td.borderx {
+                                    border: 1px solid #011B50;
+                                    padding: 2px;
+                                    margin: 2px;
+                                    vertical-align: middle;
+                                    color: #011B50;
+                                }
+                                td.table1 {
+                                    padding: 2px;
+                                    margin: 2px;
+                                    color: #011B50;
+                                    width:100px;
+                                }
+                                td.table2 {
+                                    padding: 2px;
+                                    margin: 2px;
+                                    color: #011B50;
+                                }
+                            </style>
+                            
+                            <template id="purchase_order_custom_template_header">
+                                <div class="header" style="font-size:10pt; color: #011B50;">
+                                  <div class="col-4 float-left">
+                                    <img src="/web/binary/company_logo" style="width:150px;"/>
+                                    <!--<img t-if="doc.company_id.logo" t-att-src="'data:image/png;base64,%s' %doc.company_id.logo"/>-->
+                                  </div>
+                                  <div class="col-4 float-left" style="margin-top:1px;">
+                                      <h2 style="margin-top:25px;"><strong>ORDEN DE COMPRA</strong></h2>
+                                  </div>
+                                  <div class="col-4 float-left" style="margin-top:30px;">
+                                    <div class="col-12 mb-2" style="color:white;">
+                                    </div>
+                                    <div class="col-5 float-left">
+                                      <table class="table table-borderless">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; background-color: yellow; border-bottom: 1px solid #011B50;">
+                                                  <span t-esc="doc.title_code"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; border-bottom: 1px solid #011B50;">
+                                                  <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%b-%y')"/> 
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                      </table>
+                                    </div>
+                                 <!--
+                                    <div class="col-7 float-left" style="margin-top:10px;">
+                                      <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d %H:%S')"/> 
+                                    </div>
+                                 -->
+                                  </div>
+                                  <!--<div class="col-4 float-left">-->
+                                  <!--  <div class="col-8 text-center" style="margin: 0 auto;">-->
+                                  <!--      <table class="table table-borderless">-->
+                                  <!--        <thead>-->
+                                  <!--            <tr>-->
+                                  <!--                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; background-color: yellow; border-bottom: 1px solid #011B50;">SELLER:</td>-->
+                                  <!--            </tr>-->
+                                  <!--            <tr>-->
+                                  <!--                <td class="text-center" style="padding: 2px; margin: 2px; color: #011B50; border-bottom: 1px solid #011B50;">SELLER:</td>-->
+                                  <!--            </tr>-->
+                                  <!--        </thead>-->
+                                  <!--      </table>-->
+                                  <!--  </div>-->
+                                  <!--  <div class="col-12 text-center">-->
+                                  <!--      <p>Jueves equisde dede</p>-->
+                                  <!--  </div>-->
+                                  <!--</div>-->
+                                </div>
+                            </template>
+                            
+                            <div class="row">
+                              <div class="col-12">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="table1">PROVEEDOR:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.name"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">DIRECCIÓN:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.street"/> <span t-esc="doc.partner_id.street2"/> <span t-esc="doc.partner_id.city"/> <span t-esc="doc.partner_id.state_id.name"/> <span t-esc="doc.partner_id.zip"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">CÓDIGO DE PROVEEDOR:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.ref"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">NIT:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.vat"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">TEL:</td>
+                                          <td class="table2"><span t-esc="doc.partner_id.phone"/></td>
+                                      </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                            </div>
+                            
+                            <div class="row mt-2">
+                              <div class="col-12">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="table1">COMPRADOR:</td>
+                                          <td class="table2"><span t-esc="doc.company_id.name"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">DIRECCIÓN:</td>
+                                          <td class="table2"><span t-esc="doc.picking_type_id.default_location_dest_id.location_id.name"/>/<span t-esc="doc.picking_type_id.default_location_dest_id.name"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">TEL:</td>
+                                          <td class="table2"><span t-esc="doc.company_id.phone"/></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1">EMAIL:</td>
+                                          <td class="table2"><span t-esc="doc.create_uid.login"/></td>
+                                      </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                              <div class="col-12">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="borderx text-center"><strong>Código</strong></td>
+                                          <td class="borderx text-center"><strong>Descripción</strong></td>
+                                          <td class="borderx text-center"><strong>Fardos</strong></td>
+                                          <td class="borderx text-center"><strong>Cant. Fardos</strong></td>
+                                          <td class="borderx text-center"><strong>Cantidad</strong></td>
+                                          <td class="borderx text-center"><strong>Unidad</strong></td>
+                                          <td class="borderx text-center"><strong>CBM</strong></td>
+                                          <td class="borderx text-center"><strong>PB KGS</strong></td>
+                                          <td class="borderx text-center"><strong>Precio Unitario</strong></td>
+                                          <td class="borderx text-center"><strong>Monto Total</strong></td>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <t t-set="total_ctn" t-value="0"/>
+                                      <t t-set="total_rate_ctn" t-value="0"/>
+                                      <t t-set="total_product_qty" t-value="0"/>
+                                      <t t-set="total_cbm" t-value="0"/>
+                                      <t t-set="total_pb_kgs" t-value="0"/>
+                                      <t t-foreach="doc.order_line" t-as="o">
+                                          <tr>
+                                              <t t-set="total_ctn" t-value="total_ctn + o.ctn"/>
+                                              <t t-set="total_rate_ctn" t-value="total_rate_ctn + o.rate_ctn"/>
+                                              <t t-set="total_product_qty" t-value="total_product_qty + o.product_qty"/>
+                                              <t t-set="total_cbm" t-value="total_cbm + o.cbm"/>
+                                              <t t-set="total_pb_kgs" t-value="total_pb_kgs + o.pb_kgs"/>
+                                              <td class="borderx text-center" stlyle="width: 10%;">
+                                                <!--<t t-foreach="o.product_id.seller_ids" t-as="jojo">
+                                                  <t t-if="doc.partner_id.id == jojo.name.id">
+                                                    <span t-esc="jojo.product_code"/>
+                                                  </t>
+                                                </t>-->
+                                                <span t-field="o.product_id.seller_ids.filtered(lambda x: x.name.id == doc.partner_id.id).product_code"/>
+                                              </td>
+                                              <td class="borderx"  stlyle="width: 20%;"><span t-esc="o.name"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><span t-esc="int(o.ctn)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.rate_ctn)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.product_qty)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><span t-esc="o.product_uom.name"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.cbm)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 5%;"><t t-esc="'{0:,.2f}'.format(o.pb_kgs)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 10%;"><span t-esc="doc.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(o.price_unit)"/></td>
+                                              <td class="borderx text-center" stlyle="width: 10%;"><span t-esc="doc.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(o.price_total)"/></td>
+                                          </tr>
+                                      </t>
+                                      <tr>
+                                          <td class="borderx text-center" colspan="2"><strong>TOTAL</strong></td>
+                                          <td class="borderx text-center"><span t-esc="int(total_ctn)"/></td>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_rate_ctn)"/></td>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_product_qty)"/></td>
+                                          <td class="borderx text-center"/>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_cbm)"/></td>
+                                          <td class="borderx text-center"><t t-esc="'{0:,.2f}'.format(total_pb_kgs)"/></td>
+                                          <td class="borderx text-center"/>
+                                          <td class="borderx text-center"><span t-esc="doc.currency_id.symbol"/> <t t-esc="'{0:,.2f}'.format(doc.amount_total)"/></td>
+                                      </tr>
+                                      <tr>
+                                        <td class="borderx text-right" colspan="10">
+                                          <strong>Total en letras:</strong> <span t-esc="doc.get_num2words(doc.amount_total, lang='es')"/>
+                                        </td>
+                                      </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top:100px;">
+                              <div class="col-12">
+                                <p t-field="doc.comments"/>
+                              </div>
+                            </div>
+                            <div class="row" style="margin-top:100px">
+                              <div class="col-6">
+                                <table class="table table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <td class="table1">Realizado por:</td>
+                                          <td class="table2"><span style="color:white; border-bottom: 1px solid #011B50;">zzzzzzzzzzzzzzzzzzzzz</span></td>
+                                      </tr>
+                                      <tr>
+                                          <td class="table1"></td>
+                                          <td class="table2"><span t-esc="doc.create_uid.name"/></td>
+                                      </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                              <div class="col-6">
+                                <t t-if="doc.state in ['done','purchase']">
+                                    <table class="table table-borderless">
+                                      <thead>
+                                          <tr>
+                                              <td class="table1">Autorizado por:</td>
+                                              <td class="table2"><span style="color:white; border-bottom: 1px solid #011B50;">zzzzzzzzzzzzzzzzzzzzz</span></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="table1"></td>
+                                              <td class="table2"><span t-esc="doc.approved_by_id.name"/></td>
+                                          </tr>
+                                      </thead>
+                                    </table>
+                                </t>
+                              </div>
+                            </div>
+                            
+                            <template id="invoice_fel_footer_invoice_template">
+                                <div t-attf-class="footer" style="font-size:10pt; color: #011B50;">
+                                  <div class="row">
+                                    <div class="col-12 text-center">
+                                      <span class="page"/> de <span class="topage"/>
+                                    </div>
+                                  </div>
+                                </div>
+                            </template>
+      
+                        </div>
+                      </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+    
+</odoo>

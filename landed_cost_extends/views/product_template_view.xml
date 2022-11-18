@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+    <!--<record id="view_product_arancel_form" model="ir.ui.view">
+        <field name="name">product.arancel.form</field>
+        <field name="model">product.arancel</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="amount_arancel"/>
+                        </group>
+                    </group>
+                    <group string="Descripcion">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_product_arancel_tree" model="ir.ui.view">
+        <field name="name">product.arancel.tree</field>
+        <field name="model">product.arancel</field>
+        <field name="arch" type="xml">
+            <tree string="Tabla de aranceles -DAI-">
+                <field name="name"/>
+                <field name="amount_arancel"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_product_arancel">
+        <field name="name">Aranceles -DAI-</field>
+        <field name="res_model">product.arancel</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        name="Aranceles -DAI-"
+        id="menu_product_arancel"
+        action="action_product_arancel"
+        parent="purchase.menu_product_in_config_purchase"/>
+
+
+
+    <record id="product_product_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <field name="taxes_id" position="after">
+                <label for="arancel_id" string="Arancel"/>
+                <div>
+                    <field name="arancel_id" attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                </div>
+            </field>
+        </field>
+    </record>-->
+
+
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record id="landed_cost_category" model="ir.module.category">
+        <field name="name">Prorrateo</field>
+        <field name="sequence">1</field>
+        <field name="description">Categoria para prorrateo</field>
+    </record>
+
+    <record id="group_manager_landed_cost" model="res.groups">
+        <field name="name">Distribucion Prorrateo</field>
+        <field name="category_id" ref="landed_cost_extends.landed_cost_category"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<!--<record id="stock_picking_view_form_inherit" model="ir.ui.view">
+		<field name="name">stock.picking.view.form.inherit</field>
+		<field name="model">stock.picking</field>
+		<field name="inherit_id" ref="stock.view_picking_form"/>
+		<field name="arch" type="xml">
+			<field name="picking_type_id" position="after">
+                <field name="container_qty"/>
+                <field name="is_manual_rate"/>
+                <field name="manual_rate" attrs="{'invisible': [('is_manual_rate', '=', False)], 'required': [('is_manual_rate', '=', True)]}"/>
+			</field>
+            <xpath expr="//page/field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="after">
+                <field name="amount_dai" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="price_unit_purchase" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="total_purchase" sum="Total compra" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="cbm_qty"/>
+                <field name="cbm_price"/>
+                <field name="currency_id" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="currency_rate" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="total_cbm" sum="Total Flete USD" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="total_cbm_qtq" string="Flete maritimo QTQ" sum="Total Flete QTQ" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="amount_total" sum="Total QTQ" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="amount_seguro"/>
+                <field name="total_seguro" sum="Total seguro" groups="landed_cost_extends.group_manager_landed_cost"/>
+                <field name="total_dai" sum="Total DAI" groups="landed_cost_extends.group_manager_landed_cost"/>
+            </xpath>
+		</field>
+	</record>-->
+</odoo>

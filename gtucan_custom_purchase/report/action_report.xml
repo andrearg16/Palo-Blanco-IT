@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_order_custom_format" model="report.paperformat">
+            <field name="name">Purchase Order Custom Paperformat</field>
+            <field name="format">Letter</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="purchase_order_custom_templates" model="ir.actions.report">
+            <field name="name">Orden Local / Exterior</field>
+            <field name="model">purchase.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gtucan_custom_purchase.purchase_order_custom_template</field>
+            <field name="report_file">gtucan_custom_purchase.purchase_order_custom_template</field>
+            <field name="print_report_name">'Purchase Order - %s' % (object.name)</field>
+            <field name="paperformat_id" ref="gtucan_custom_purchase.purchase_order_custom_format"/>
+        </record>
+
+    </data>
+</odoo>

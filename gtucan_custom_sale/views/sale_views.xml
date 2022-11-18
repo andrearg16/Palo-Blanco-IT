@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="replace" >
+                <field name="product_uom_qty" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="before" >
+                <field name="inner" string="Inner"/>
+                <field name="inner_qty" string="Unidades Inner"/>
+                <field name="ctn" string="Fardos"/>
+                <field name="rate_ctn"/>
+                <field name="product_uom_qty"/>
+                <field name="cbm" sum="Total CBM" />
+                <field name="pb_kgs" sum="Total PB KGS" />
+            </xpath>
+            <xpath expr="//group/field[@name='product_id']" position="after" >
+                <field name="inner" string="Inner"/>
+                <field name="inner_qty" string="Unidades Inner"/>
+                <field name="ctn" string="Fardos"/>
+                <field name="rate_ctn"/>
+                <field name="product_uom_qty"/>
+                <field name="cbm" sum="Total CBM" />
+                <field name="pb_kgs" sum="Total PB KGS" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

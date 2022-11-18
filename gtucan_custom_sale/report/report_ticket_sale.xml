@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="paperformat_ticket_project_task_sale" model="report.paperformat">
+        <field name="name">Ticket Receipt</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">195</field>
+        <field name="page_width">80</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">30</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_spacing">28</field>
+        <field name="dpi">110</field>
+    </record>
+
+    <template id="custom_ticket_layout_project_sale">
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <div class="header">
+            <div class="text-center"  style="font-size: 12px !important;">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 35px;"
+                         alt="Logo"/>
+                    <div t-if="company.name" class=" font-size 11xp !important; text-center">
+                        <span t-field="company.name"/>
+                        <t t-if="company.country_id">(<span t-esc="company.country_id.name"/>)
+                        </t>
+                    </div>
+                    <div t-if="company.street" class=" font-size 11xp !important;text-center">
+                        <span class="o_force_ltr" t-field="company.street"/>
+                        <t t-if="company.street2">,
+                            <span class="o_force_ltr" t-field="company.street2"/>
+                        </t>
+                    </div>
+                    <div t-if="company.vat" class=" font-size 11xp !important;text-center">Nit:
+                        <span class="o_force_ltr" t-field="company.vat"/>
+                    </div>
+                    <div t-if="company.phone" class=" font-size 11xp !important; text-center">Tel:
+                        <span class="o_force_ltr" t-field="company.phone"/>
+                    </div>
+                    <div t-if="company.website">
+                        <span t-field="company.website"/>
+                    </div>
+                    <div>--------------------------------------</div>
+            </div>
+                <div class="col text-center" style="font-size: 12px !important;">
+                    <b>Cotización de venta No. </b>
+                    <t t-esc=" o.name"/>
+                </div>
+        </div>
+            <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+                 t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <t t-out="0"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="ticket_sales_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+               <t t-call="gtucan_custom_sale.custom_ticket_layout_project_sale">
+                    <div class="row" style="font-size: 12px !important;margin-top:1px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width:20%;border-color: white; padding-left:15px">
+                                        <b>Cliente:</b> <span style="word-break: break-all;" t-field="o.partner_id.name"/>
+                                        <br/>
+                                        <b>  Fecha de pedido:</b> <span t-field="o.date_order"/>
+                                        <br/>
+                                        <b>  Condición de pago:</b> <span t-field="o.payment_term_id.name"/>
+                                        <br/>
+                                        <b>  Dirección:</b> <span t-field="o.partner_id.street2"/>
+                                        <span t-field="o.partner_id.city"/>
+                                        <span t-field="o.partner_id.country_id"/>
+                                        <br/>
+                                        <b>  Teléfono:</b> <span t-field="o.partner_id.phone"/>
+                                        <br/>
+                                        <b>  NIT:</b> <span t-field="o.partner_id.vat"/>
+                                        <br/>
+                                        <b>  Vendedor:</b> <span t-field="o.user_id.name"/>
+                                    </td>
+                                </tr>                             
+                            </tbody>
+                    </div>   
+            <table class="table table-sm" style="width:100%; margin-top:2px; font-size:11px !important;border-collapse: collapse;" border="0" cellpadding="0" cellspacing="0" padding="0" margin="0">
+                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                <thead style="display: table-row-group">
+                    <tr>
+                        <th name="td_name" class="text-center" style="width:300px;">Descripción</th>
+                        <th name="th_quantity" class="text-center" style="width:50px;">Cant.</th>
+                        <th name="th_priceunit" class="text-center" style="width:170px;">Precio Unitario</th>
+                        <th name="th_subtotal" class="text-center" style="width:80px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+                    <t t-set="current_subtotal" t-value="0"/>
+                    <t t-set="current_discount" t-value="0"/>
+                      <t t-foreach="o.order_line" t-as="line">
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                        <t t-set="current_discount" t-value="line.discount"/>
+                          <tr>
+                                  <td class="celda_sin!" name="td_name" style="text-align:left"><span t-field="line.product_id.name"/></td>
+                                  <td class="celda_sin!" name="td_quantity" style="text-align:right">
+                                      <span t-esc="'{:,.2f}'.format(line.product_uom_qty)"/>
+                                  </td>
+                                  <td class="celda_sin!" name="td_priceunit" style="text-align:right">
+                                    <span t-field="o.pricelist_id.currency_id.symbol"/> 
+                                      <span t-field="line.price_unit"/>  
+                                  </td>
+                                  <td class="celda_sin!" name="td_subtotal" style="text-align:right">
+                                      <span t-field="line.price_total"/>
+                                  </td>
+                          </tr>
+                      </t>
+                </tbody>
+                <tfoot>
+                        <tr class="is-subtotal" style="text-align: right">
+                                <td name="td_section_subtotal" colspan="99">
+                                    <strong class="mr16">Subtotal:</strong>
+                                    <span t-esc="current_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.pricelist_id.currency_id}"/>
+                                     <br/>
+                                    <strong class="mr16">Descuento:</strong>
+                                    <span t-esc="current_discount" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.pricelist_id.currency_id}"/>
+                                    <br/>
+                                    <strong class="mr16">Total pedido:</strong>
+                                    <span t-esc="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.pricelist_id.currency_id}"/>
+                                </td>
+                        </tr>
+                </tfoot>
+            </table>
+                    <div class="row" style="font-size: 11px; text-align:justify">
+                        <div class="col">
+                            <b>Observaciones:</b>
+                            <span style="font-size: 11px; text-align:justify">
+                                     <t t-esc="o.note"/>
+                            </span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div style="font-size: 11px; text-align:center">
+                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                    </div>
+                </t>
+            </t>
+         </t>
+        
+    </template>
+
+    <record id="action_custom_sale" model="ir.actions.report">
+        <field name="name">Ticket de venta</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="paperformat_id" ref="gtucan_custom_sale.paperformat_ticket_project_task_sale"/>
+        <field name="report_name">gtucan_custom_sale.ticket_sales_receipt</field>
+        <field name="print_report_name">('Ticket - %s' % (object.name))</field>
+        <field name="report_file">gtucan_custom_sale.ticket_sales_receipt</field>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

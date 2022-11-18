@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+      <!--<template id="tucan_report_web_document_inherit" inherit_id="web.address_layout">
+        
+          <xpath expr="//div[@name='address']" position="inside">
+            <t t-if="doc.partner_id.ref">
+              <p style="margin-top:-15px;">Código del cliente: <span t-field="doc.partner_id.ref"/></p>
+            </t>
+          </xpath>
+
+      </template>-->
+
+  </data>
+</odoo>
